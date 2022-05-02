@@ -1,0 +1,75 @@
+diff --git a/node_modules/rollup-plugin-userscript-metablock/dist/rollup-plugin-userscript-metablock.common.js b/node_modules/rollup-plugin-userscript-metablock/dist/rollup-plugin-userscript-metablock.common.js
+index a98e4fd..ca9c290 100644
+--- a/node_modules/rollup-plugin-userscript-metablock/dist/rollup-plugin-userscript-metablock.common.js
++++ b/node_modules/rollup-plugin-userscript-metablock/dist/rollup-plugin-userscript-metablock.common.js
+@@ -44,9 +44,7 @@ class UnknownMetakeyToScriptManager extends Error {}
+ class InvalidMetaValue extends Error {}
+ 
+ const DEFAULT_METAS = {
+-  name: 'New Script',
+-  namespace: 'npmjs.com/rollup-plugin-userscript-metablock',
+-  grant: 'none',
++  name: 'New Script'
+ };
+ 
+ const getMetaEntry = ([metakey, metavalue], { validator, manager }) => {
+diff --git a/node_modules/rollup-plugin-userscript-metablock/dist/rollup-plugin-userscript-metablock.esm.js b/node_modules/rollup-plugin-userscript-metablock/dist/rollup-plugin-userscript-metablock.esm.js
+index ff502fd..857c814 100644
+--- a/node_modules/rollup-plugin-userscript-metablock/dist/rollup-plugin-userscript-metablock.esm.js
++++ b/node_modules/rollup-plugin-userscript-metablock/dist/rollup-plugin-userscript-metablock.esm.js
+@@ -32,9 +32,7 @@ class UnknownMetakeyToScriptManager extends Error {}
+ class InvalidMetaValue extends Error {}
+ 
+ const DEFAULT_METAS = {
+-  name: 'New Script',
+-  namespace: 'npmjs.com/rollup-plugin-userscript-metablock',
+-  grant: 'none',
++  name: 'New Script'
+ };
+ 
+ const getMetaEntry = ([metakey, metavalue], { validator, manager }) => {
+diff --git a/node_modules/rollup-plugin-userscript-metablock/types/rollup-plugin-userscript-metablock.d.ts b/node_modules/rollup-plugin-userscript-metablock/types/rollup-plugin-userscript-metablock.d.ts
+index c454ed7..3934f79 100644
+--- a/node_modules/rollup-plugin-userscript-metablock/types/rollup-plugin-userscript-metablock.d.ts
++++ b/node_modules/rollup-plugin-userscript-metablock/types/rollup-plugin-userscript-metablock.d.ts
+@@ -12,7 +12,7 @@ declare module 'rollup-plugin-userscript-metablock' {
+     include?: string | string[];
+     exclude?: string | string[];
+     icon?: string;
+-    require?: string;
++    require?: string | string[];
+ 
+     /** Default `"document-end"` */
+     'run-at'?:
+@@ -29,6 +29,31 @@ declare module 'rollup-plugin-userscript-metablock' {
+     version?: string;
+     noframes?: true;
+     grant?: string | string[];
++
++    author?: string;
++    license?: string;
++
++    homepage?: string;
++    homepageURL?: string;
++    website?: string;
++    source?: string;
++
++    iconURL?: string;
++    defaulticon?: string;
++    icon64?: string;
++    icon64URL?: string;
++
++    updateURL?: string;
++    downloadURL?: string | 'none';
++    installURL?: string;
++    supportURL?: string;
++
++    connect?: string | string[];
++    webRequest?: string;
++    unwrap?: boolean;
++    nocompat?: boolean | string;
++
++    [field: string]: string | string[] | boolean | undefined;
+   };
+ 
+   export type Options = {
