@@ -7,7 +7,7 @@
 #   rollup-plugin-userscript-metablock: 0.3.1
 #
 diff --git a/node_modules/rollup-plugin-userscript-metablock/dist/rollup-plugin-userscript-metablock.common.js b/node_modules/rollup-plugin-userscript-metablock/dist/rollup-plugin-userscript-metablock.common.js
-index a98e4fd..ca9c290 100644
+index a98e4fd..43fcd0b 100644
 --- a/node_modules/rollup-plugin-userscript-metablock/dist/rollup-plugin-userscript-metablock.common.js
 +++ b/node_modules/rollup-plugin-userscript-metablock/dist/rollup-plugin-userscript-metablock.common.js
 @@ -44,9 +44,7 @@ class UnknownMetakeyToScriptManager extends Error {}
@@ -21,21 +21,39 @@ index a98e4fd..ca9c290 100644
  };
  
  const getMetaEntry = ([metakey, metavalue], { validator, manager }) => {
-diff --git a/node_modules/rollup-plugin-userscript-metablock/dist/rollup-plugin-userscript-metablock.esm.js b/node_modules/rollup-plugin-userscript-metablock/dist/rollup-plugin-userscript-metablock.esm.js
-index ff502fd..857c814 100644
---- a/node_modules/rollup-plugin-userscript-metablock/dist/rollup-plugin-userscript-metablock.esm.js
-+++ b/node_modules/rollup-plugin-userscript-metablock/dist/rollup-plugin-userscript-metablock.esm.js
-@@ -32,9 +32,7 @@ class UnknownMetakeyToScriptManager extends Error {}
- class InvalidMetaValue extends Error {}
+@@ -676,6 +674,23 @@ const parseOptions = (options) => {
+     Object.assign(conf.metakeys, override);
+   }
  
- const DEFAULT_METAS = {
--  name: 'New Script',
--  namespace: 'npmjs.com/rollup-plugin-userscript-metablock',
--  grant: 'none',
-+  name: 'New Script'
++  // handle automatic icon
++  if (conf.metakeys.icon && conf.metakeys.icon.startsWith("favicon:")) {
++    conf.metakeys.icon =
++      "https://www.google.com/s2/favicons?domain=" +
++      conf.metakeys.icon.substring(8);
++  } else if (conf.metakeys.match && !conf.metakeys.icon) {
++    const url = isString(conf.metakeys.match)
++      ? conf.metakeys.match
++      : conf.metakeys.match[0];
++
++    const match = /:\/\/(?<domain>.+?)\//.exec(url);
++    if (match && match.groups.domain) {
++      conf.metakeys.icon =
++        "https://www.google.com/s2/favicons?domain=" + match.groups.domain;
++    }
++  }
++
+   // remove invalid keys
+   conf.metakeys = Object.keys(conf.metakeys).reduce((collect, key) => {
+     if (isValidMetakeyName(key)) {
+@@ -752,7 +767,7 @@ const renderAll = (entries) => {
+   }
+   lines.push('// ==/UserScript==');
+ 
+-  return lines.map((l) => l.trim()).join('\n');
++  return lines.map((l) => l.trim()).join('\n') + "\n";
  };
  
- const getMetaEntry = ([metakey, metavalue], { validator, manager }) => {
+ function metablock(options = {}) {
 diff --git a/node_modules/rollup-plugin-userscript-metablock/types/rollup-plugin-userscript-metablock.d.ts b/node_modules/rollup-plugin-userscript-metablock/types/rollup-plugin-userscript-metablock.d.ts
 index c454ed7..3934f79 100644
 --- a/node_modules/rollup-plugin-userscript-metablock/types/rollup-plugin-userscript-metablock.d.ts
