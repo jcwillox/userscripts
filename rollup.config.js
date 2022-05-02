@@ -42,7 +42,7 @@ export default defineConfig(
           override: {
             author: pkg.author,
             license: pkg.license,
-            namespace: pkg.repository
+            namespace: pkg.repository.url
           },
           manager: "tampermonkey",
           order: [

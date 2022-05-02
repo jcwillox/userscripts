@@ -2,7 +2,10 @@
   "name": "userscripts",
   "author": "jcwillox",
   "license": "MIT",
-  "repository": "github:jcwillox/userscripts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jcwillox/userscripts"
+  },
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -c --watch",
