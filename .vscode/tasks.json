@@ -1,0 +1,59 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build: Script",
+			"detail": "Build the currently open userscript",
+			"type": "shell",
+			"command": "npm run build -s",
+			"options": {
+				"env": {
+					"PROJECT": "${relativeFileDirname}"
+				}
+			},
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
+			"label": "Build: All",
+			"detail": "Build all userscripts",
+			"type": "shell",
+			"command": "npm run build -s",
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
+			"label": "Watch: Script",
+			"detail": "Watch the currently open userscript",
+			"type": "shell",
+			"command": "npm run watch -s",
+			"options": {
+				"env": {
+					"PROJECT": "${relativeFileDirname}"
+				}
+			},
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
+			"label": "Watch: All",
+			"detail": "Watch all userscripts",
+			"type": "shell",
+			"command": "npm run watch -s",
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
+			"label": "Open: Script",
+			"detail": "Open the current script in the browser",
+			"type": "shell",
+			"command": "npm run open -s",
+			"options": {
+				"env": {
+					"PROJECT": "${relativeFileDirname}"
+				}
+			},
+			"problemMatcher": []
+		},
+	]
+}
