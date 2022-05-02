@@ -1,0 +1,42 @@
+{
+  "name": "userscripts",
+  "author": "jcwillox",
+  "license": "MIT",
+  "repository": "github:jcwillox/userscripts",
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c --watch",
+    "open": "node ./scripts/open-userscript.js",
+    "format": "prettier src/ --write",
+    "format:check": "prettier src/ --check",
+    "postinstall": "patch-package"
+  },
+  "dependencies": {
+    "@mdi/js": "^6.6.96",
+    "highlight.js": "^11.5.1",
+    "open": "^8.4.0",
+    "patch-package": "^6.4.7",
+    "prettier": "^2.6.2"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^22.0.0",
+    "@rollup/plugin-node-resolve": "^13.2.1",
+    "@rollup/plugin-typescript": "^8.3.2",
+    "@types/glob": "^7.2.0",
+    "@types/node": "^16.11.32",
+    "@types/tampermonkey": "^4.0.5",
+    "glob": "^8.0.1",
+    "rollup": "^2.71.1",
+    "rollup-plugin-bundle-size": "^1.0.3",
+    "rollup-plugin-prettier": "^2.2.2",
+    "rollup-plugin-sizes": "^1.0.4",
+    "rollup-plugin-string": "^3.0.0",
+    "rollup-plugin-userscript-metablock": "^0.3.1",
+    "tslib": "^2.4.0",
+    "typescript": "^4.6.4"
+  },
+  "packageManager": "pnpm@6.32.11",
+  "engines": {
+    "node": "16.x"
+  }
+}

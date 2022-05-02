@@ -1,0 +1,138 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "definitions": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength":  1
+    },
+    "multiString": {
+      "anyOf": [
+        { "$ref": "#/definitions/nonEmptyString" },
+        {
+          "type": "array",
+          "items": { "$ref": "#/definitions/nonEmptyString" },
+          "uniqueItems": true
+        }
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "name": { "$ref": "#/definitions/nonEmptyString",
+      "description": "The name of the script"
+    },
+    "namespace": { "$ref": "#/definitions/nonEmptyString" },
+    "version": { "$ref": "#/definitions/nonEmptyString" },
+    "author": { "$ref": "#/definitions/nonEmptyString" },
+    "description": { "type": "string" },
+    "homepage": { "type": "string" },
+    "homepageURL": { "type": "string" },
+    "website": { "$ref": "#/definitions/nonEmptyString" },
+    "source": { "$ref": "#/definitions/nonEmptyString" },
+    "icon": { "$ref": "#/definitions/nonEmptyString" },
+    "iconURL": { "$ref": "#/definitions/nonEmptyString" },
+    "defaulticon": { "$ref": "#/definitions/nonEmptyString" },
+    "icon64": { "$ref": "#/definitions/nonEmptyString" },
+    "icon64URL": { "$ref": "#/definitions/nonEmptyString" },
+    "updateURL": { "$ref": "#/definitions/nonEmptyString" },
+    "downloadURL": { "$ref": "#/definitions/nonEmptyString" },
+    "installURL": { "$ref": "#/definitions/nonEmptyString" },
+    "supportURL": { "$ref": "#/definitions/nonEmptyString" },
+    "include": { "$ref": "#/definitions/multiString" },
+    "match": { "$ref": "#/definitions/multiString" },
+    "exclude": { "$ref": "#/definitions/multiString" },
+    "require": { "$ref": "#/definitions/multiString" },
+    "resource": {
+      "type": "object"
+    },
+    "connect": { "$ref": "#/definitions/multiString" },
+    "run-at": {
+      "type": "string",
+      "enum": [ "document-start", "document-body", "document-end", "document-idle", "context-menu" ],
+      "default": "document-end"
+    },
+    "grant": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "unsafeWindow",
+              "GM_addStyle",
+              "GM_addElement",
+              "GM_deleteValue",
+              "GM_listValues",
+              "GM_addValueChangeListener",
+              "GM_removeValueChangeListener",
+              "GM_setValue",
+              "GM_getValue",
+              "GM_log",
+              "GM_getResourceText",
+              "GM_getResourceURL",
+              "GM_registerMenuCommand",
+              "GM_unregisterMenuCommand",
+              "GM_openInTab",
+              "GM_xmlhttpRequest",
+              "GM_download",
+              "GM_getTab",
+              "GM_saveTab",
+              "GM_getTabs",
+              "GM_notification",
+              "GM_setClipboard"
+            ]
+          },
+          "uniqueItems": true
+        },
+        {
+          "type": "string",
+          "enum": [
+            "none",
+            "unsafeWindow",
+            "GM_addStyle",
+            "GM_addElement",
+            "GM_deleteValue",
+            "GM_listValues",
+            "GM_addValueChangeListener",
+            "GM_removeValueChangeListener",
+            "GM_setValue",
+            "GM_getValue",
+            "GM_log",
+            "GM_getResourceText",
+            "GM_getResourceURL",
+            "GM_registerMenuCommand",
+            "GM_unregisterMenuCommand",
+            "GM_openInTab",
+            "GM_xmlhttpRequest",
+            "GM_download",
+            "GM_getTab",
+            "GM_saveTab",
+            "GM_getTabs",
+            "GM_notification",
+            "GM_setClipboard"
+          ]
+        }
+      ],
+      "default": "none"
+    },
+    "webRequest": { "$ref": "#/definitions/nonEmptyString" },
+    "noframes": {
+      "type": "boolean",
+      "default": false
+    },
+    "unwrap": {
+      "type": "boolean",
+      "default": false
+    },
+    "nocompat": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "additionalProperties": {
+    "anyOf": [
+      { "$ref": "#/definitions/multiString" },
+      { "type": "boolean" }
+    ]
+  }
+}
