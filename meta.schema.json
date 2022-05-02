@@ -3,125 +3,195 @@
   "definitions": {
     "nonEmptyString": {
       "type": "string",
-      "minLength":  1
+      "minLength": 1
     },
     "multiString": {
       "anyOf": [
-        { "$ref": "#/definitions/nonEmptyString" },
+        {
+          "$ref": "#/definitions/nonEmptyString"
+        },
         {
           "type": "array",
-          "items": { "$ref": "#/definitions/nonEmptyString" },
+          "items": {
+            "$ref": "#/definitions/nonEmptyString"
+          },
           "uniqueItems": true
         }
+      ]
+    },
+    "grant": {
+      "type": "string",
+      "default": "none",
+      "enum": [
+        "none",
+        "unsafeWindow",
+        "GM_addStyle",
+        "GM_addElement",
+        "GM_deleteValue",
+        "GM_listValues",
+        "GM_addValueChangeListener",
+        "GM_removeValueChangeListener",
+        "GM_setValue",
+        "GM_getValue",
+        "GM_log",
+        "GM_getResourceText",
+        "GM_getResourceURL",
+        "GM_registerMenuCommand",
+        "GM_unregisterMenuCommand",
+        "GM_openInTab",
+        "GM_xmlhttpRequest",
+        "GM_download",
+        "GM_getTab",
+        "GM_saveTab",
+        "GM_getTabs",
+        "GM_notification",
+        "GM_setClipboard"
       ]
     }
   },
   "type": "object",
+  "required": [
+    "name",
+    "version",
+    "description"
+  ],
   "properties": {
-    "name": { "$ref": "#/definitions/nonEmptyString",
-      "description": "The name of the script"
+    "name": {
+      "$ref": "#/definitions/nonEmptyString",
+      "description": "The name of the script.",
+      "default": "My Userscript"
     },
-    "namespace": { "$ref": "#/definitions/nonEmptyString" },
-    "version": { "$ref": "#/definitions/nonEmptyString" },
-    "author": { "$ref": "#/definitions/nonEmptyString" },
-    "description": { "type": "string" },
-    "homepage": { "type": "string" },
-    "homepageURL": { "type": "string" },
-    "website": { "$ref": "#/definitions/nonEmptyString" },
-    "source": { "$ref": "#/definitions/nonEmptyString" },
-    "icon": { "$ref": "#/definitions/nonEmptyString" },
-    "iconURL": { "$ref": "#/definitions/nonEmptyString" },
-    "defaulticon": { "$ref": "#/definitions/nonEmptyString" },
-    "icon64": { "$ref": "#/definitions/nonEmptyString" },
-    "icon64URL": { "$ref": "#/definitions/nonEmptyString" },
-    "updateURL": { "$ref": "#/definitions/nonEmptyString" },
-    "downloadURL": { "$ref": "#/definitions/nonEmptyString" },
-    "installURL": { "$ref": "#/definitions/nonEmptyString" },
-    "supportURL": { "$ref": "#/definitions/nonEmptyString" },
-    "include": { "$ref": "#/definitions/multiString" },
-    "match": { "$ref": "#/definitions/multiString" },
-    "exclude": { "$ref": "#/definitions/multiString" },
-    "require": { "$ref": "#/definitions/multiString" },
+    "namespace": {
+      "$ref": "#/definitions/nonEmptyString",
+      "description": "The namespace of the script."
+    },
+    "version": {
+      "$ref": "#/definitions/nonEmptyString",
+      "description": "The script version. This is used for the update check, in case the script is not installed from userscript.org or TM has problems to retrieve the scripts meta data.",
+      "default": "0.1.0"
+    },
+    "author": {
+      "$ref": "#/definitions/nonEmptyString",
+      "description": "The scripts author."
+    },
+    "description": {
+      "type": "string",
+      "description": "A short significant description.\nInternationalization is done by adding an appendix naming the locale.",
+      "default": "My Userscript"
+    },
+    "homepage": {
+      "type": "string",
+      "description": "Alias for @homepageURL."
+    },
+    "homepageURL": {
+      "type": "string",
+      "description": "The authors homepage that is used at the options page to link from the scripts name to the given page. Please note that if the @namespace tag starts with 'https://' its content will be used for this too."
+    },
+    "website": {
+      "$ref": "#/definitions/nonEmptyString",
+      "description": "Alias for @homepageURL."
+    },
+    "source": {
+      "$ref": "#/definitions/nonEmptyString",
+      "description": "Alias for @homepageURL."
+    },
+    "icon": {
+      "$ref": "#/definitions/nonEmptyString",
+      "description": "The script icon."
+    },
+    "iconURL": {
+      "$ref": "#/definitions/nonEmptyString",
+      "description": "Alias for @icon."
+    },
+    "defaulticon": {
+      "$ref": "#/definitions/nonEmptyString",
+      "description": "Alias for @icon."
+    },
+    "icon64": {
+      "$ref": "#/definitions/nonEmptyString",
+      "description": "This scripts icon in 64x64 pixels. If this tag, but @icon is given the @icon image will be scaled at some places at the options page."
+    },
+    "icon64URL": {
+      "$ref": "#/definitions/nonEmptyString",
+      "description": "Alias for @icon64."
+    },
+    "updateURL": {
+      "$ref": "#/definitions/nonEmptyString",
+      "description": "An update URL for the userscript.\nNote: a @version tag is required to make update checks work."
+    },
+    "downloadURL": {
+      "$ref": "#/definitions/nonEmptyString",
+      "description": "Defines the URL where the script will be downloaded from when an update was detected. If the value none is used, then no update check will be done."
+    },
+    "installURL": {
+      "$ref": "#/definitions/nonEmptyString"
+    },
+    "supportURL": {
+      "$ref": "#/definitions/nonEmptyString",
+      "description": "Defines the URL where the user can report issues and get personal support."
+    },
+    "include": {
+      "$ref": "#/definitions/multiString",
+      "description": "Deprecated: use @match instead"
+    },
+    "match": {
+      "$ref": "#/definitions/multiString",
+      "description": "The pages on that a script should run."
+    },
+    "exclude": {
+      "$ref": "#/definitions/multiString",
+      "description": "Exclude URLs even it they are included by @include or @match."
+    },
+    "require": {
+      "$ref": "#/definitions/multiString",
+      "description": "Points to a JavaScript file that is loaded and executed before the script itself starts running.\nNote: the scripts loaded via @require and their \"use strict\" statements might influence the userscript's strict mode!"
+    },
     "resource": {
-      "type": "object"
+      "type": "object",
+      "description": "Preloads resources that can by accessed via GM_getResourceURL and GM_getResourceText by the script."
     },
-    "connect": { "$ref": "#/definitions/multiString" },
+    "connect": {
+      "$ref": "#/definitions/multiString",
+      "description": "This tag defines the domains (no top-level domains) including subdomains which are allowed to be retrieved by GM_xmlhttpRequest."
+    },
     "run-at": {
       "type": "string",
-      "enum": [ "document-start", "document-body", "document-end", "document-idle", "context-menu" ],
+      "enum": [
+        "document-start",
+        "document-body",
+        "document-end",
+        "document-idle",
+        "context-menu"
+      ],
+      "description": "Defines the moment the script is injected. In opposition to other script handlers, @run-at defines the first possible moment a script wants to run.",
       "default": "document-end"
     },
     "grant": {
-      "anyOf": [
+      "oneOf": [
+        {
+          "$ref": "#/definitions/grant"
+        },
         {
           "type": "array",
           "items": {
-            "type": "string",
-            "enum": [
-              "unsafeWindow",
-              "GM_addStyle",
-              "GM_addElement",
-              "GM_deleteValue",
-              "GM_listValues",
-              "GM_addValueChangeListener",
-              "GM_removeValueChangeListener",
-              "GM_setValue",
-              "GM_getValue",
-              "GM_log",
-              "GM_getResourceText",
-              "GM_getResourceURL",
-              "GM_registerMenuCommand",
-              "GM_unregisterMenuCommand",
-              "GM_openInTab",
-              "GM_xmlhttpRequest",
-              "GM_download",
-              "GM_getTab",
-              "GM_saveTab",
-              "GM_getTabs",
-              "GM_notification",
-              "GM_setClipboard"
-            ]
+            "$ref": "#/definitions/grant"
           },
           "uniqueItems": true
-        },
-        {
-          "type": "string",
-          "enum": [
-            "none",
-            "unsafeWindow",
-            "GM_addStyle",
-            "GM_addElement",
-            "GM_deleteValue",
-            "GM_listValues",
-            "GM_addValueChangeListener",
-            "GM_removeValueChangeListener",
-            "GM_setValue",
-            "GM_getValue",
-            "GM_log",
-            "GM_getResourceText",
-            "GM_getResourceURL",
-            "GM_registerMenuCommand",
-            "GM_unregisterMenuCommand",
-            "GM_openInTab",
-            "GM_xmlhttpRequest",
-            "GM_download",
-            "GM_getTab",
-            "GM_saveTab",
-            "GM_getTabs",
-            "GM_notification",
-            "GM_setClipboard"
-          ]
         }
       ],
-      "default": "none"
+      "description": "@grant is used to whitelist GM_* functions, the unsafeWindow object and some powerful window functions. If no @grant tag is given TM guesses the scripts needs."
     },
-    "webRequest": { "$ref": "#/definitions/nonEmptyString" },
+    "webRequest": {
+      "$ref": "#/definitions/nonEmptyString"
+    },
     "noframes": {
       "type": "boolean",
+      "description": "This tag makes the script running on the main pages, but not at iframes.",
       "default": false
     },
     "unwrap": {
       "type": "boolean",
+      "description": "Injects the userscript without any wrapper and sandbox into the page, which might be useful for Scriptlets.",
       "default": false
     },
     "nocompat": {
@@ -131,8 +201,12 @@
   },
   "additionalProperties": {
     "anyOf": [
-      { "$ref": "#/definitions/multiString" },
-      { "type": "boolean" }
+      {
+        "$ref": "#/definitions/multiString"
+      },
+      {
+        "type": "boolean"
+      }
     ]
   }
 }
