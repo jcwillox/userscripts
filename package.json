@@ -10,8 +10,8 @@
     "build": "rollup -c",
     "watch": "rollup -c --watch",
     "open": "node ./scripts/open-userscript.js",
-    "format": "prettier src/ --write",
-    "format:check": "prettier src/ --check",
+    "format": "prettier --write {**/*,*}.{js,ts,jsx,tsx,yaml,css,json}",
+    "format:check": "prettier --check {**/*,*}.{js,ts,jsx,tsx,yaml,css,json}",
     "postinstall": "patch-package"
   },
   "dependencies": {
