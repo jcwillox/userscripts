@@ -1,5 +1,5 @@
-const open = require("open");
-const path = require("path");
+import open from "open";
+import path from "path";
 
 let project;
 if (process.env.PROJECT) {
