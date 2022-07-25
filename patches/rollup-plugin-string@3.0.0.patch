@@ -1,0 +1,13 @@
+diff --git a/index.js b/index.js
+index e67387f30189df6ec0ded2270f32763a57bb532d..7495e80534917382534f607733c8f4920fe9e22d 100644
+--- a/index.js
++++ b/index.js
+@@ -13,7 +13,7 @@ function string(opts = {}) {
+     transform(code, id) {
+       if (filter(id)) {
+         return {
+-          code: `export default ${JSON.stringify(code)};`,
++          code: 'export default `\n' + code + '`;',
+           map: { mappings: "" }
+         };
+       }
