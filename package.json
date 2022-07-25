@@ -15,30 +15,30 @@
     "update:readme": "ts-node --skipProject scripts/update-readme.ts"
   },
   "dependencies": {
-    "@mdi/js": "^6.6.96",
-    "highlight.js": "^11.5.1",
+    "@mdi/js": "^7.0.96",
+    "highlight.js": "^11.6.0",
     "js-yaml": "^4.1.0",
     "open": "^8.4.0",
-    "prettier": "^2.6.2",
-    "ts-node": "^10.7.0"
+    "prettier": "^2.7.1",
+    "ts-node": "^10.9.1"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^22.0.0",
+    "@rollup/plugin-commonjs": "^22.0.1",
     "@rollup/plugin-node-resolve": "^13.3.0",
-    "@rollup/plugin-typescript": "^8.3.2",
+    "@rollup/plugin-typescript": "^8.3.3",
     "@types/glob": "^7.2.0",
     "@types/js-yaml": "^4.0.5",
-    "@types/node": "^16.11.33",
+    "@types/node": "^16.11.45",
     "@types/tampermonkey": "^4.0.5",
-    "glob": "^8.0.1",
-    "rollup": "^2.71.1",
+    "glob": "^8.0.3",
+    "rollup": "^2.77.0",
     "rollup-plugin-bundle-size": "^1.0.3",
     "rollup-plugin-prettier": "^2.2.2",
     "rollup-plugin-sizes": "^1.0.4",
     "rollup-plugin-string": "3.0.0",
     "rollup-plugin-userscript-metablock": "0.3.1",
     "tslib": "^2.4.0",
-    "typescript": "^4.6.4"
+    "typescript": "^4.7.4"
   },
   "packageManager": "pnpm@7.6.0",
   "engines": {
