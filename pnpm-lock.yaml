@@ -14,12 +14,10 @@ specifiers:
   '@rollup/plugin-node-resolve': ^13.3.0
   '@rollup/plugin-typescript': ^8.3.3
   '@types/glob': ^7.2.0
-  '@types/js-yaml': ^4.0.5
   '@types/node': ^16.11.45
   '@types/tampermonkey': ^4.0.5
   glob: ^8.0.3
   highlight.js: ^11.6.0
-  js-yaml: ^4.1.0
   open: ^8.4.0
   prettier: ^2.7.1
   rollup: ^2.77.0
@@ -35,7 +33,6 @@ specifiers:
 dependencies:
   '@mdi/js': 7.0.96
   highlight.js: 11.6.0
-  js-yaml: 4.1.0
   open: 8.4.0
   prettier: 2.7.1
   ts-node: 10.9.1_kmhzd2ra25a2aeanupbqenugla
@@ -45,7 +42,6 @@ devDependencies:
   '@rollup/plugin-node-resolve': 13.3.0_rollup@2.77.0
   '@rollup/plugin-typescript': 8.3.3_sbpikdwgo7pbmeew3vug7t5zyu
   '@types/glob': 7.2.0
-  '@types/js-yaml': 4.0.5
   '@types/node': 16.11.45
   '@types/tampermonkey': 4.0.5
   glob: 8.0.3
@@ -175,10 +171,6 @@ packages:
       '@types/node': 16.11.45
     dev: true
 
-  /@types/js-yaml/4.0.5:
-    resolution: {integrity: sha512-FhpRzf927MNQdRZP0J5DLIdTXhjLYzeUTmLAu69mnVksLH9CJY3IuSeEgbKUki7GQZm0WqDkGzyxju2EZGD2wA==}
-    dev: true
-
   /@types/minimatch/3.0.5:
     resolution: {integrity: sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==}
     dev: true
@@ -234,6 +226,7 @@ packages:
 
   /argparse/2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
+    dev: true
 
   /balanced-match/1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -486,6 +479,7 @@ packages:
     hasBin: true
     dependencies:
       argparse: 2.0.1
+    dev: true
 
   /lodash.hasin/4.5.2:
     resolution: {integrity: sha1-+R41I3jSHvcJC552h8LKNcW01So=}
