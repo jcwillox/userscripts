@@ -9,6 +9,9 @@
   "[javascript][javascriptreact][typescript][typescriptreact][json][jsonc][yaml][html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[markdown]": {
+    "editor.formatOnSave": false
+  },
   "yaml.schemas": {
     "meta.schema.json": "meta.yaml"
   }
