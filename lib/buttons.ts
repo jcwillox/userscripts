@@ -1,4 +1,4 @@
-import { svgIcon } from "./index";
+import svgIcon from "./mdi-svg-icon";
 
 // language=CSS
 GM_addStyle(`
@@ -16,7 +16,7 @@ GM_addStyle(`
         margin-left: 8px;
     }
 
-    #gm-button {
+    .gm-button {
       cursor: pointer;
       user-select: none;
     }
@@ -24,18 +24,18 @@ GM_addStyle(`
 
 export function createButton(
   content: string,
-  action: () => void
+  action: (e: MouseEvent) => void
 ): HTMLSpanElement {
   const buttonEl = document.createElement("span");
   buttonEl.innerHTML = content;
-  buttonEl.onclick = action;
-  buttonEl.id = "gm-button";
+  buttonEl.addEventListener("mouseup", action);
+  buttonEl.classList.add("gm-button");
   return buttonEl;
 }
 
 export function createIconButton(
   svgPath: string,
-  action: () => void,
+  action: (e: MouseEvent) => void,
   size?: number
 ): HTMLSpanElement {
   return createButton(svgIcon(svgPath, size), action);
