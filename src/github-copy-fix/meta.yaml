@@ -1,0 +1,5 @@
+name: GitHub Copy Fix
+version: 0.1.0
+description: Strips leading '$' when copying code from GitHub
+icon: https://github.githubassets.com/favicons/favicon-dark.png
+match: https://github.com/*/*

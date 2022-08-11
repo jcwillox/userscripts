@@ -1,0 +1,8 @@
+name: Fandom Tweaks
+version: 0.1.0
+description: Useful tweaks for fandom based sites to make them more usable
+icon: favicon:fandom.com
+match: "*://*.fandom.com/*"
+run-at: document-body
+grant:
+  - GM_addStyle
