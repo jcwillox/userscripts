@@ -1,17 +1,16 @@
 {
   "compilerOptions": {
     "target": "es2019",
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
     "module": "esnext",
     "moduleResolution": "node",
-    "noImplicitAny": false,
-    "resolveJsonModule": true
+    "strict": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": false
   },
   "include": [
     "**/*.ts",
