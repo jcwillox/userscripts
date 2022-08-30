@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name        Open in YouTube
 // @namespace   https://github.com/jcwillox/userscripts
-// @version     0.1.0
+// @version     0.1.1
 // @description Adds a button to YouTube Music and Shorts to open the video in YouTube
 // @author      jcwillox
 // @license     MIT
 // @match       https://music.youtube.com/watch?v=*
-// @match       https://www.youtube.com/shorts/*
+// @match       https://www.youtube.com/*
 // @icon        https://www.google.com/s2/favicons?domain=youtube.com
 // @run-at      document-end
 // @grant       GM_openInTab
