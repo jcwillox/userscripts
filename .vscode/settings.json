@@ -1,16 +1,12 @@
 {
   "editor.formatOnSave": true,
-  "eslint.alwaysShowStatus": true,
+  "editor.linkedEditing": true,
   "editor.renderWhitespace": "trailing",
   "editor.codeActionsOnSave": {
-    "source.fixAll": true,
-    "source.organizeImports": true
+    "source.fixAll": true
   },
-  "[javascript][javascriptreact][typescript][typescriptreact][json][jsonc][yaml][html]": {
+  "[javascript][javascriptreact][typescript][typescriptreact][json][jsonc][yaml][html][markdown][postcss][css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[markdown]": {
-    "editor.formatOnSave": false
   },
   "yaml.schemas": {
     "meta.schema.json": "meta.yaml"
