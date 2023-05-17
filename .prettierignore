@@ -1,3 +1,2 @@
-README.md
 pnpm-lock.yaml
-tsconfig.json
+dist/

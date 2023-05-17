@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2019",
+    "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
     "strict": true,
@@ -10,11 +10,9 @@
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "noEmit": true
   },
-  "include": [
-    "**/*.ts",
-    "**/*.d.ts",
-    "**/*.css"
-  ]
+  "include": ["**/*.ts", "**/*.d.ts", "**/*.css"],
+  "exclude": ["node_modules"]
 }

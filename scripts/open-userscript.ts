@@ -15,8 +15,4 @@ const name = path.basename(project);
 const isTesting = project.includes("testing/");
 const extension = (isTesting ? ".test" : "") + ".user.js";
 
-open(path.resolve(path.posix.join("dist", name + extension)), {
-  app: {
-    name: open.apps.chrome
-  }
-}).then();
+open(path.resolve(path.posix.join("dist", name + extension))).then();
