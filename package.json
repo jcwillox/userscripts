@@ -11,17 +11,17 @@
     "build": "vite build",
     "watch": "vite build --watch",
     "open": "ts-node --skipProject scripts/open-userscript.ts",
-    "lint": "eslint . --ext .js,.ts,.d.ts --max-warnings=0",
-    "lint:fix": "npm run lint -s -- --fix",
-    "format": "prettier --write {**/*,*}.{js,ts,jsx,tsx,yaml,css,json}",
-    "format:check": "prettier --check {**/*,*}.{js,ts,jsx,tsx,yaml,css,json}",
+    "lint": "eslint . --cache --max-warnings=0 --ext js,cjs,mjs,jsx,ts,tsx",
+    "lint:fix": "pnpm run lint --fix",
+    "format": "prettier --cache --write .",
+    "format:check": "prettier --cache --check .",
     "update:readme": "md-template table -p userscripts"
   },
   "dependencies": {
     "@mdi/js": "7.2.96",
     "highlight.js": "11.8.0",
     "open": "9.1.0",
-    "prettier": "^2.7.1",
+    "prettier": "2.8.8",
     "ts-node": "^10.9.1"
   },
   "devDependencies": {
