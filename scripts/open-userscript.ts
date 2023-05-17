@@ -1,18 +1,13 @@
 import path from "path";
-import open from "open";
+import open, { apps } from "open";
+import { normalizePath } from "vite";
 
-let project: string | undefined;
-if (process.env.PROJECT) {
-  project = process.env.PROJECT;
-} else if (process.argv.length === 3) {
-  project = process.argv[2];
-} else {
-  process.exit(1);
-}
+const PROJECT_ARG = process.env.PROJECT || process.argv.at(-1) || "";
+const PROJECT_PATH = normalizePath(PROJECT_ARG);
+const PROJECT_NAME = path.basename(PROJECT_PATH);
 
-project = project.replaceAll("\\", "/");
-const name = path.basename(project);
-const isTesting = project.includes("testing/");
-const extension = (isTesting ? ".test" : "") + ".user.js";
+const IS_TESTING = PROJECT_PATH.startsWith("testing/");
+const SCRIPT_NAME = `${PROJECT_NAME}.${IS_TESTING ? "test." : ""}user.js`;
+const SCRIPT_PATH = path.resolve(__dirname, "../dist", SCRIPT_NAME);
 
-open(path.resolve(path.posix.join("dist", name + extension))).then();
+open(SCRIPT_PATH, { app: { name: apps.chrome } });
