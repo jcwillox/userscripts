@@ -14,5 +14,6 @@
   },
   "yaml.schemas": {
     "meta.schema.json": "meta.yaml"
-  }
+  },
+  "vite.autoStart": false
 }

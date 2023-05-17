@@ -1,5 +1,5 @@
 diff --git a/dist/rollup-plugin-userscript-metablock.common.js b/dist/rollup-plugin-userscript-metablock.common.js
-index a98e4fdad1e005de43f44d91e366761ec7f7edf0..43fcd0b6de3ff84a3c88f3322c88e746c4031b70 100644
+index a98e4fdad1e005de43f44d91e366761ec7f7edf0..901972c834ade201dbd18f9c713180b3f847a705 100644
 --- a/dist/rollup-plugin-userscript-metablock.common.js
 +++ b/dist/rollup-plugin-userscript-metablock.common.js
 @@ -44,9 +44,7 @@ class UnknownMetakeyToScriptManager extends Error {}
@@ -46,8 +46,28 @@ index a98e4fdad1e005de43f44d91e366761ec7f7edf0..43fcd0b6de3ff84a3c88f3322c88e746
  };
  
  function metablock(options = {}) {
+@@ -766,6 +781,7 @@ function metablock(options = {}) {
+   debug__default['default']('plugin:top::final')(final);
+ 
+   return {
++    meta: final,
+     renderChunk(code, renderedChunk, outputOptions) {
+       const magicString = new MagicString__default['default'](code);
+       magicString.prepend(final + '\n').trimEnd('\\n');
+diff --git a/dist/rollup-plugin-userscript-metablock.esm.js b/dist/rollup-plugin-userscript-metablock.esm.js
+index ff502fdb7c8fd4bb16c29e2bef9ecc6154309b68..3842a71069bd5ee5c63555309e9fe997d05afc95 100644
+--- a/dist/rollup-plugin-userscript-metablock.esm.js
++++ b/dist/rollup-plugin-userscript-metablock.esm.js
+@@ -754,6 +754,7 @@ function metablock(options = {}) {
+   debug('plugin:top::final')(final);
+ 
+   return {
++    meta: final,
+     renderChunk(code, renderedChunk, outputOptions) {
+       const magicString = new MagicString(code);
+       magicString.prepend(final + '\n').trimEnd('\\n');
 diff --git a/types/rollup-plugin-userscript-metablock.d.ts b/types/rollup-plugin-userscript-metablock.d.ts
-index c454ed7d5290d84ab9860c456ff76d0f78c26f00..3934f799109d2123f0c59f95fc91b1d635178fec 100644
+index c454ed7d5290d84ab9860c456ff76d0f78c26f00..818446f32d72a11d30074d12588e7e7bb93fbeaa 100644
 --- a/types/rollup-plugin-userscript-metablock.d.ts
 +++ b/types/rollup-plugin-userscript-metablock.d.ts
 @@ -12,7 +12,7 @@ declare module 'rollup-plugin-userscript-metablock' {
@@ -91,3 +111,15 @@ index c454ed7d5290d84ab9860c456ff76d0f78c26f00..3934f799109d2123f0c59f95fc91b1d6
    };
  
    export type Options = {
+@@ -50,7 +75,10 @@ declare module 'rollup-plugin-userscript-metablock' {
+     validator?: 'off' | 'warn' | 'error';
+   };
+ 
+-  function metablock (options?: Options): any;
++  function metablock (options?: Options): {
++    meta: string,
++    renderChunk(code, renderedChunk, outputOptions): string
++  };
+ 
+   export default metablock;
+ }

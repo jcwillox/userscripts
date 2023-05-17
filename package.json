@@ -2,13 +2,14 @@
   "name": "userscripts",
   "author": "jcwillox",
   "license": "MIT",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/jcwillox/userscripts"
   },
   "scripts": {
-    "build": "rollup -c",
-    "watch": "rollup -c --watch",
+    "build": "vite build",
+    "watch": "vite build --watch",
     "open": "ts-node --skipProject scripts/open-userscript.ts",
     "lint": "eslint . --ext .js,.ts,.d.ts --max-warnings=0",
     "lint:fix": "npm run lint -s -- --fix",
@@ -24,10 +25,6 @@
     "ts-node": "^10.9.1"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^22.0.1",
-    "@rollup/plugin-node-resolve": "^13.3.0",
-    "@rollup/plugin-typescript": "^8.3.3",
-    "@types/glob": "^7.2.0",
     "@types/node": "^16.11.45",
     "@types/tampermonkey": "^4.0.5",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
@@ -35,15 +32,9 @@
     "eslint": "^8.21.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-only-warn": "^1.0.3",
-    "glob": "^8.0.3",
-    "rollup": "^2.77.0",
-    "rollup-plugin-bundle-size": "^1.0.3",
-    "rollup-plugin-prettier": "^2.2.2",
-    "rollup-plugin-sizes": "^1.0.4",
-    "rollup-plugin-string": "3.0.0",
     "rollup-plugin-userscript-metablock": "0.3.1",
-    "tslib": "^2.4.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "vite": "4.3.7"
   },
   "packageManager": "pnpm@8.5.1",
   "engines": {
@@ -51,7 +42,6 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "rollup-plugin-string@3.0.0": "patches/rollup-plugin-string@3.0.0.patch",
       "rollup-plugin-userscript-metablock@0.3.1": "patches/rollup-plugin-userscript-metablock@0.3.1.patch"
     }
   }
