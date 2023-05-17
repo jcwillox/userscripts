@@ -1,6 +1,6 @@
-import { createIconButton } from "../../lib/buttons";
-import { useSelector } from "../../lib/hooks";
 import { mdiYoutube } from "@mdi/js";
+import { createIconButton } from "@/lib/buttons";
+import { useSelector } from "@/lib/hooks";
 
 function createButton(url: () => string, css: Record<string, unknown>) {
   const button = createIconButton(mdiYoutube, e => {
@@ -45,6 +45,7 @@ if (location.hostname === "music.youtube.com") {
             url.pathname = "/watch";
             url.searchParams.set(
               "v",
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               (element as any).data.command.reelWatchEndpoint.videoId
             );
             return url.href;

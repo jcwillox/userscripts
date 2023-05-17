@@ -1,4 +1,4 @@
-import { useSystemTheme, useWaitElement } from "../../lib/hooks";
+import { useSystemTheme, useWaitElement } from "@/lib/hooks";
 
 // language=css
 GM_addStyle(`
@@ -29,7 +29,7 @@ useWaitElement<HTMLDivElement>("div.page.has-right-rail").then(element => {
   element.classList.remove("has-right-rail");
 });
 
-// toggle dark-mode based on system-preference
+//! toggle dark-mode based on system-preference
 useSystemTheme({
   onDark: () => {
     if (document.cookie.indexOf("theme=dark") == -1) {

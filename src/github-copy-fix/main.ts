@@ -1,4 +1,4 @@
-import { useSelector } from "../../lib/hooks";
+import { useSelector } from "@/lib/hooks";
 
 useSelector<HTMLInputElement>("clipboard-copy", element => {
   if (element.value.startsWith("$ ")) {

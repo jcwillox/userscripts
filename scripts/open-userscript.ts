@@ -1,7 +1,7 @@
-import open from "open";
 import path from "path";
+import open from "open";
 
-let project;
+let project: string | undefined;
 if (process.env.PROJECT) {
   project = process.env.PROJECT;
 } else if (process.argv.length === 3) {

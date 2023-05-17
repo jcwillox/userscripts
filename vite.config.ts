@@ -1,7 +1,7 @@
-import { defineConfig, normalizePath } from "vite";
-import path from "path";
-import metablock from "rollup-plugin-userscript-metablock";
 import { readFileSync } from "fs";
+import path, { resolve } from "path";
+import metablock from "rollup-plugin-userscript-metablock";
+import { defineConfig, normalizePath } from "vite";
 import pkg from "./package.json";
 
 const PROJECT_ARG = process.env.PROJECT || process.argv.at(-1) || "";
@@ -51,5 +51,10 @@ export default defineConfig({
   },
   esbuild: {
     banner: METADATA
+  },
+  resolve: {
+    alias: {
+      "@": resolve(__dirname, ".")
+    }
   }
 });
