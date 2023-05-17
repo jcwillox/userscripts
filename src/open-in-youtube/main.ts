@@ -3,7 +3,7 @@ import { createIconButton } from "@/lib/buttons";
 import { useSelector } from "@/lib/hooks";
 
 function createButton(url: () => string, css: Record<string, unknown>) {
-  const button = createIconButton(mdiYoutube, e => {
+  const button = createIconButton(mdiYoutube, (e) => {
     // ignore if not left or middle click
     if (e.button > 1) return;
     e.preventDefault();
@@ -35,7 +35,7 @@ if (location.hostname === "music.youtube.com") {
     );
   }
 } else {
-  useSelector("ytd-reel-video-renderer", element => {
+  useSelector("ytd-reel-video-renderer", (element) => {
     const controlsEl = element.querySelector("ytd-shorts-player-controls");
     if (controlsEl) {
       controlsEl.insertBefore(

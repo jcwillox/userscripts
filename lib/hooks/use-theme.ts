@@ -12,7 +12,7 @@ export function useSystemTheme({ onDark, onLight }: Options) {
     }
     window
       .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", e => {
+      .addEventListener("change", (e) => {
         if (e.matches) {
           onDark?.();
         } else {
@@ -38,6 +38,6 @@ export function useSystemThemeCSS({ darkCSS, lightCSS }: OptionsCSS) {
     onDark: () => {
       styleEl && styleEl.remove();
       if (darkCSS) styleEl = GM_addStyle(darkCSS);
-    }
+    },
   });
 }

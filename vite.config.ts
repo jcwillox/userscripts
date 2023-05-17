@@ -12,7 +12,7 @@ const METADATA = metablock({
   override: {
     author: pkg.author,
     license: pkg.license,
-    namespace: pkg.repository.url
+    namespace: pkg.repository.url,
   },
   manager: "tampermonkey",
   order: [
@@ -30,8 +30,8 @@ const METADATA = metablock({
     "grant",
     "require",
     "resource",
-    "noframes"
-  ]
+    "noframes",
+  ],
 }).meta;
 
 export default defineConfig({
@@ -39,22 +39,22 @@ export default defineConfig({
     lib: {
       entry: path.posix.join(PROJECT_PATH, "main.ts"),
       fileName: () => `${PROJECT_NAME}.user.js`,
-      formats: ["es"]
+      formats: ["es"],
     },
     minify: false,
     emptyOutDir: false,
     rollupOptions: {
       output: {
-        banner: readFileSync("lib/log-version.ts").toString()
-      }
-    }
+        banner: readFileSync("lib/log-version.ts").toString(),
+      },
+    },
   },
   esbuild: {
-    banner: METADATA
+    banner: METADATA,
   },
   resolve: {
     alias: {
-      "@": resolve(__dirname, ".")
-    }
-  }
+      "@": resolve(__dirname, "."),
+    },
+  },
 });

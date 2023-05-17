@@ -24,8 +24,8 @@ GM_addStyle(`
   }
 `);
 
-// moves right panel to the bottom of the page
-useWaitElement<HTMLDivElement>("div.page.has-right-rail").then(element => {
+//! moves right panel to the bottom of the page
+useWaitElement<HTMLDivElement>("div.page.has-right-rail").then((element) => {
   element.classList.remove("has-right-rail");
 });
 
@@ -46,5 +46,5 @@ useSystemTheme({
         "theme=light; Domain=.fandom.com; Path=/; Max-Age=2592000";
       location.reload();
     }
-  }
+  },
 });
