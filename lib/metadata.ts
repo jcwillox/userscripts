@@ -1,6 +1,6 @@
 import path from "path";
 import metablock from "rollup-plugin-userscript-metablock";
-import pkg from "@/package.json";
+import pkg from "../package.json";
 
 export function loadMetadata(project: string) {
   return metablock({

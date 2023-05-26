@@ -1,7 +1,8 @@
 import { readFileSync } from "fs";
 import path, { resolve } from "path";
+import UnoCSS from "unocss/vite";
 import { defineConfig, normalizePath } from "vite";
-import { loadMetadata } from "@/lib/metadata";
+import { loadMetadata } from "./lib/metadata";
 
 const BOUNDARY_REGEX = /^\/\/! module-boundary/gm;
 const COMMENT_REGEX = /\/\/!/gm;
@@ -30,6 +31,7 @@ export default defineConfig({
     banner: "//! module-boundary",
   },
   plugins: [
+    UnoCSS({ mode: "shadow-dom" }),
     {
       name: "clean-bundle",
       generateBundle: (options, bundle) => {
