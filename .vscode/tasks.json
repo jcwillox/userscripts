@@ -2,57 +2,42 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Build: Script",
+      "label": "Build: Current",
       "detail": "Build the currently open userscript",
-      "type": "shell",
-      "command": "npm run build -s",
-      "options": {
-        "env": {
-          "PROJECT": "${relativeFileDirname}"
-        }
-      },
+      "type": "npm",
+      "script": "build -- -- \"${relativeFileDirname}\"",
       "group": "build",
       "problemMatcher": []
     },
     {
       "label": "Build: All",
       "detail": "Build all userscripts",
-      "type": "shell",
-      "command": "npm run build -s",
+      "type": "npm",
+      "script": "build:all",
       "group": "build",
       "problemMatcher": []
     },
     {
-      "label": "Watch: Script",
+      "label": "Watch: Current",
       "detail": "Watch the currently open userscript",
-      "type": "shell",
-      "command": "npm run watch -s",
-      "options": {
-        "env": {
-          "PROJECT": "${relativeFileDirname}"
-        }
-      },
+      "type": "npm",
+      "script": "build:watch -- -- \"${relativeFileDirname}\"",
       "group": "build",
       "problemMatcher": []
     },
     {
       "label": "Watch: All",
       "detail": "Watch all userscripts",
-      "type": "shell",
-      "command": "npm run watch -s",
+      "type": "npm",
+      "script": "build:watch:all",
       "group": "build",
       "problemMatcher": []
     },
     {
-      "label": "Open: Script",
+      "label": "Open: Current",
       "detail": "Open the current script in the browser",
       "type": "shell",
-      "command": "npm run open -s",
-      "options": {
-        "env": {
-          "PROJECT": "${relativeFileDirname}"
-        }
-      },
+      "command": "./node_modules/.bin/tsx scripts/open-userscript.ts ${relativeFileDirname}",
       "problemMatcher": []
     }
   ]
