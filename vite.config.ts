@@ -1,38 +1,14 @@
 import { readFileSync } from "fs";
 import path, { resolve } from "path";
-import metablock from "rollup-plugin-userscript-metablock";
 import { defineConfig, normalizePath } from "vite";
-import pkg from "./package.json";
+import { loadMetadata } from "@/lib/metadata";
+
+const BOUNDARY_REGEX = /^\/\/! module-boundary/gm;
+const COMMENT_REGEX = /\/\/!/gm;
 
 const PROJECT_ARG = process.env.PROJECT || process.argv.at(-1) || "";
 const PROJECT_PATH = normalizePath(PROJECT_ARG);
 const PROJECT_NAME = path.basename(PROJECT_PATH);
-const METADATA = metablock({
-  file: path.posix.join(PROJECT_PATH, "meta.yaml"),
-  override: {
-    author: pkg.author,
-    license: pkg.license,
-    namespace: pkg.repository.url,
-  },
-  manager: "tampermonkey",
-  order: [
-    "name",
-    "namespace",
-    "version",
-    "description",
-    "author",
-    "license",
-    "match",
-    "include",
-    "exclude",
-    "icon",
-    "run-at",
-    "grant",
-    "require",
-    "resource",
-    "noframes",
-  ],
-}).meta;
 
 export default defineConfig({
   build: {
@@ -42,6 +18,7 @@ export default defineConfig({
       formats: ["es"],
     },
     minify: false,
+    cssMinify: true,
     emptyOutDir: false,
     rollupOptions: {
       output: {
@@ -50,8 +27,23 @@ export default defineConfig({
     },
   },
   esbuild: {
-    banner: METADATA,
+    banner: "//! module-boundary",
   },
+  plugins: [
+    {
+      name: "clean-bundle",
+      generateBundle: (options, bundle) => {
+        for (const [fileName, chunk] of Object.entries(bundle)) {
+          if (chunk.type === "chunk" && fileName.endsWith(".user.js")) {
+            const project = path.basename(fileName).replace(".user.js", "");
+            chunk.code = loadMetadata(project) + chunk.code;
+            chunk.code = chunk.code.replace(BOUNDARY_REGEX, "");
+            chunk.code = chunk.code.replace(COMMENT_REGEX, "//");
+          }
+        }
+      },
+    },
+  ],
   resolve: {
     alias: {
       "@": resolve(__dirname, "."),

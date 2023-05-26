@@ -1,3 +1,2 @@
-import svgIcon from "./mdi-svg-icon";
-
-export { svgIcon };
+export * from "./mdi-svg-icon";
+export * from "./middleware";
