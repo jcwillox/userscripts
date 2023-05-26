@@ -9,7 +9,9 @@
   "scripts": {
     "prepare": "husky install",
     "build": "vite build",
-    "watch": "vite build --watch",
+    "build:all": "tsx scripts/build-all.ts",
+    "build:watch": "vite build --watch",
+    "build:watch:all": "tsx scripts/build-all.ts --watch",
     "open": "tsx scripts/open-userscript.ts",
     "typecheck": "tsc",
     "lint": "eslint . --cache --max-warnings=0 --ext js,cjs,mjs,jsx,ts,tsx",
@@ -24,6 +26,8 @@
   },
   "dependencies": {
     "@mdi/js": "7.2.96",
+    "concurrently": "8.0.1",
+    "glob": "10.2.6",
     "highlight.js": "11.8.0",
     "open": "9.1.0"
   },
