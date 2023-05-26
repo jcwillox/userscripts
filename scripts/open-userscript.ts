@@ -1,11 +1,8 @@
 import path from "path";
 import open, { apps } from "open";
-import { normalizePath } from "vite";
+import { loadProject } from "@/lib/metadata";
 
-const PROJECT_ARG = process.env.PROJECT || process.argv.at(-1) || "";
-const PROJECT_PATH = normalizePath(PROJECT_ARG);
-const PROJECT_NAME = path.basename(PROJECT_PATH);
-
+const [PROJECT_NAME, PROJECT_PATH] = loadProject();
 const IS_TESTING = PROJECT_PATH.startsWith("testing/");
 const SCRIPT_NAME = `${PROJECT_NAME}.${IS_TESTING ? "test." : ""}user.js`;
 const SCRIPT_PATH = path.resolve(__dirname, "../dist", SCRIPT_NAME);

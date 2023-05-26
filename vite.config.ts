@@ -1,15 +1,14 @@
 import { readFileSync } from "fs";
 import path, { resolve } from "path";
 import UnoCSS from "unocss/vite";
-import { defineConfig, normalizePath } from "vite";
-import { loadMetadata } from "./lib/metadata";
+import { defineConfig } from "vite";
+import { loadMetadata, loadProject } from "./lib/metadata";
 
 const BOUNDARY_REGEX = /^\/\/! module-boundary/gm;
 const COMMENT_REGEX = /\/\/!/gm;
+const [PROJECT_NAME, PROJECT_PATH] = loadProject();
 
-const PROJECT_ARG = process.env.PROJECT || process.argv.at(-1) || "";
-const PROJECT_PATH = normalizePath(PROJECT_ARG);
-const PROJECT_NAME = path.basename(PROJECT_PATH);
+console.log(`PROJECT: ${PROJECT_PATH}`);
 
 export default defineConfig({
   build: {
