@@ -1,2 +1,3 @@
 export * from "./use-theme";
-export * from "./wait-element";
+export * from "./use-selector";
+export * from "./use-wait-element";
