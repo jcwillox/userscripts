@@ -26,6 +26,9 @@ devDependencies:
   '@types/node':
     specifier: 18.16.12
     version: 18.16.12
+  '@types/prettier':
+    specifier: 2.7.2
+    version: 2.7.2
   '@types/tampermonkey':
     specifier: 4.0.10
     version: 4.0.10
@@ -521,6 +524,10 @@ packages:
 
   /@types/node@18.16.12:
     resolution: {integrity: sha512-tIRrjbY9C277MOfP8M3zjMIhtMlUJ6YVqkGgLjz+74jVsdf4/UjC6Hku4+1N0BS0qyC0JAS6tJLUk9H6JUKviQ==}
+    dev: true
+
+  /@types/prettier@2.7.2:
+    resolution: {integrity: sha512-KufADq8uQqo1pYKVIYzfKbJfBAc0sOeXqGbFaSpv8MRmC/zXgowNZmFcbngndGk922QDmOASEXUZCaY48gs4cg==}
     dev: true
 
   /@types/semver@7.5.0:

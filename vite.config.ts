@@ -1,5 +1,6 @@
 import { readFileSync } from "fs";
 import path, { resolve } from "path";
+import { format } from "prettier";
 import UnoCSS from "unocss/vite";
 import { defineConfig } from "vite";
 import { loadMetadata, loadProject } from "./lib/metadata";
@@ -40,6 +41,7 @@ export default defineConfig({
             chunk.code = loadMetadata(project) + chunk.code;
             chunk.code = chunk.code.replace(BOUNDARY_REGEX, "");
             chunk.code = chunk.code.replace(COMMENT_REGEX, "//");
+            chunk.code = format(chunk.code, { filepath: chunk.fileName });
           }
         }
       },
