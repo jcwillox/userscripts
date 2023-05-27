@@ -1,6 +1,5 @@
 import { mdiYoutube } from "@mdi/js";
-import { createIconButton } from "@/lib/buttons";
-import { useSelector } from "@/lib/hooks";
+import { useSelector } from "@/hooks";
 
 function createButton(url: () => string, css: Record<string, unknown>) {
   const button = createIconButton(mdiYoutube, (e) => {

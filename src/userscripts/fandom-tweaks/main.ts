@@ -1,4 +1,4 @@
-import { useSystemTheme, useWaitElement } from "@/lib/hooks";
+import { useSystemTheme, useWaitElement } from "@/hooks";
 
 // language=css
 GM_addStyle(`

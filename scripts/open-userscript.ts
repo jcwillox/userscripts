@@ -1,6 +1,6 @@
 import path from "path";
 import open, { apps } from "open";
-import { loadProject } from "@/lib/metadata";
+import { loadProject } from "@/metadata";
 
 const [PROJECT_NAME, PROJECT_PATH] = loadProject();
 const IS_TESTING = PROJECT_PATH.startsWith("testing/");

@@ -34,9 +34,9 @@ export function loadProject() {
   return [path.basename(projectPath), projectPath] as const;
 }
 
-export function loadMetadata(project: string) {
+export function loadMetadata(projectPath: string) {
   return metablock({
-    file: path.join("src", project, "meta.yaml"),
+    file: path.join(projectPath, "meta.yaml"),
     override: {
       author: pkg.author,
       license: pkg.license,

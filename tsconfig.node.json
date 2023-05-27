@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true
+  },
+  "include": [
+    "vite.config.ts",
+    "uno.config.ts",
+    "package.json",
+    "src/metadata.ts"
+  ]
+}

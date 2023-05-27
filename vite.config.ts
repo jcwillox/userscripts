@@ -1,9 +1,9 @@
 import { readFileSync } from "fs";
-import path, { resolve } from "path";
+import * as path from "path";
 import { format } from "prettier";
 import UnoCSS from "unocss/vite";
 import { defineConfig } from "vite";
-import { loadMetadata, loadProject } from "./lib/metadata";
+import { loadMetadata, loadProject } from "./src/metadata";
 
 const BOUNDARY_REGEX = /^\/\/! module-boundary/gm;
 const COMMENT_REGEX = /\/\/!/gm;
@@ -23,7 +23,7 @@ export default defineConfig({
     emptyOutDir: false,
     rollupOptions: {
       output: {
-        banner: readFileSync("lib/log-version.ts").toString(),
+        banner: readFileSync("src/log-version.ts").toString(),
       },
     },
   },
@@ -37,8 +37,7 @@ export default defineConfig({
       generateBundle: (options, bundle) => {
         for (const [fileName, chunk] of Object.entries(bundle)) {
           if (chunk.type === "chunk" && fileName.endsWith(".user.js")) {
-            const project = path.basename(fileName).replace(".user.js", "");
-            chunk.code = loadMetadata(project) + chunk.code;
+            chunk.code = loadMetadata(PROJECT_PATH) + chunk.code;
             chunk.code = chunk.code.replace(BOUNDARY_REGEX, "");
             chunk.code = chunk.code.replace(COMMENT_REGEX, "//");
             chunk.code = format(chunk.code, { filepath: chunk.fileName });
@@ -49,7 +48,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": resolve(__dirname, "."),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
 });

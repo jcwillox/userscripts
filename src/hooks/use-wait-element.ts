@@ -1,4 +1,4 @@
-import { useSelector } from "@/lib";
+import { useSelector } from "./use-selector";
 
 export interface WaitElementOptions {
   root?: Element;
