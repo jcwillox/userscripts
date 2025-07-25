@@ -1,3 +1,4 @@
+import type { StrictlyParseSelector } from "typed-query-selector/parser";
 import { useSelector } from "./use-selector";
 
 export interface WaitElementOptions {
@@ -5,10 +6,11 @@ export interface WaitElementOptions {
   timeout?: number;
 }
 
-export function useWaitElement<T extends Element = Element>(
-  selector: string,
-  options: WaitElementOptions = {}
-): Promise<T> {
+export function useWaitElement<
+  E extends Element = Element,
+  S extends string = string,
+  T extends StrictlyParseSelector<S, E> = StrictlyParseSelector<S, E>
+>(selector: S, options: WaitElementOptions = {}): Promise<T> {
   return new Promise((resolve, reject) => {
     //! check if element already exists
     const el = document.querySelector<T>(selector);

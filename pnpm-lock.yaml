@@ -71,6 +71,9 @@ devDependencies:
   tsx:
     specifier: 3.12.7
     version: 3.12.7
+  typed-query-selector:
+    specifier: ^2.10.1
+    version: 2.10.1
   typescript:
     specifier: 5.0.4
     version: 5.0.4
@@ -3037,6 +3040,10 @@ packages:
       call-bind: 1.0.2
       for-each: 0.3.3
       is-typed-array: 1.1.10
+    dev: true
+
+  /typed-query-selector@2.10.1:
+    resolution: {integrity: sha512-VyNeetDghQngbLWOVyxUFB95nZF3z3QIrvdsWmuDwwYbePEup9hjZbNT1IK5YP3t8LqicnYNnDpQPW3vq7iCTQ==}
     dev: true
 
   /typescript@5.0.4:

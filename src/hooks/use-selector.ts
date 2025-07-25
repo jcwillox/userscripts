@@ -1,3 +1,5 @@
+import type { StrictlyParseSelector } from "typed-query-selector/parser";
+
 export interface UseSelectorOptions {
   root?: Element;
   event?: "added" | "removed";
@@ -5,8 +7,12 @@ export interface UseSelectorOptions {
 
 //! watch selector for changes, fires callback every time the element is added
 //! call observer.disconnect() to stop watching
-export function useSelector<T extends Element = Element>(
-  selector: Node | string,
+export function useSelector<
+  E extends Element = Element,
+  S extends string = string,
+  T extends StrictlyParseSelector<S, E> = StrictlyParseSelector<S, E>
+>(
+  selector: Node | S,
   callback: (element: T) => void,
   options: UseSelectorOptions = {}
 ) {
