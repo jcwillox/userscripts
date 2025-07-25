@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 import metablock from "rollup-plugin-userscript-metablock";
 import { normalizePath } from "vite";
@@ -19,6 +19,7 @@ function getLastProject() {
 }
 
 function setLastProject(project: string) {
+  mkdirSync(path.dirname(CACHE_PATH), { recursive: true });
   writeFileSync(CACHE_PATH, project);
 }
 
