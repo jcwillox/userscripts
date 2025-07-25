@@ -22,9 +22,9 @@ function createButton(url: () => string, className?: string) {
       e.preventDefault();
       e.stopPropagation();
       // check if middle mouse button is pressed
-      if (e.button == 1) {
+      if (e.button === 1) {
         GM_openInTab(url());
-      } else if (e.button == 0) {
+      } else if (e.button === 0) {
         location.href = url();
       }
     },

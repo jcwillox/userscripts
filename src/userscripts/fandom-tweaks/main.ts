@@ -32,7 +32,7 @@ useWaitElement("div.page.has-right-rail").then((element) => {
 //! toggle dark-mode based on system-preference
 useSystemTheme({
   onDark: () => {
-    if (document.cookie.indexOf("theme=dark") == -1) {
+    if (document.cookie.indexOf("theme=dark") === -1) {
       console.log("Changing to dark theme");
       document.cookie =
         "theme=dark; Domain=.fandom.com; Path=/; Max-Age=2592000";

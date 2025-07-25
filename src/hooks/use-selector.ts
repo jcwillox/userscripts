@@ -21,8 +21,8 @@ export function useSelector<
     event: options.event || "added",
   };
 
-  if (opts.event == "added") {
-    if (typeof selector == "string") {
+  if (opts.event === "added") {
+    if (typeof selector === "string") {
       for (const el of document.querySelectorAll<T>(selector)) {
         callback(el);
       }
@@ -34,22 +34,22 @@ export function useSelector<
   const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
       const nodes =
-        opts.event == "added" ? mutation.addedNodes : mutation.removedNodes;
+        opts.event === "added" ? mutation.addedNodes : mutation.removedNodes;
       const matches =
-        typeof selector == "string" && opts.root.querySelectorAll<T>(selector);
+        typeof selector === "string" && opts.root.querySelectorAll<T>(selector);
       for (const node of nodes) {
         if (node.nodeType === Node.ELEMENT_NODE) {
           const el = node as Element;
-          if (typeof selector == "string") {
+          if (typeof selector === "string") {
             if (matches) {
               for (const match of matches) {
-                if (match == el) {
+                if (match === el) {
                   callback(match);
                   break;
                 }
               }
             }
-          } else if (node == selector) {
+          } else if (node === selector) {
             callback(el as T);
           }
         }
