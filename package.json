@@ -2,6 +2,7 @@
   "name": "userscripts",
   "author": "jcwillox",
   "license": "MIT",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/jcwillox/userscripts"
@@ -25,41 +26,45 @@
     "*.!(js|cjs|mjs|jsx|ts|tsx)": "prettier --ignore-unknown --cache --write"
   },
   "dependencies": {
-    "@mdi/js": "7.2.96",
-    "concurrently": "8.0.1",
-    "glob": "10.2.6",
-    "highlight.js": "11.8.0",
-    "open": "9.1.0"
+    "@mdi/js": "7.4.47",
+    "concurrently": "9.2.0",
+    "glob": "11.0.3",
+    "highlight.js": "11.11.1",
+    "open": "10.2.0"
   },
   "devDependencies": {
-    "@types/node": "18.16.12",
-    "@types/prettier": "2.7.2",
-    "@types/tampermonkey": "4.0.10",
-    "@typescript-eslint/eslint-plugin": "5.59.7",
-    "@typescript-eslint/parser": "5.59.7",
-    "eslint": "8.41.0",
-    "eslint-config-prettier": "8.8.0",
-    "eslint-import-resolver-typescript": "3.5.5",
-    "eslint-plugin-import": "2.27.5",
+    "@types/node": "22.13.14",
+    "@types/prettier": "3.0.0",
+    "@types/tampermonkey": "5.0.4",
+    "@typescript-eslint/eslint-plugin": "5.62.0",
+    "@typescript-eslint/parser": "5.62.0",
+    "eslint": "8.57.1",
+    "eslint-config-prettier": "8.10.2",
+    "eslint-import-resolver-typescript": "3.10.1",
+    "eslint-plugin-import": "2.32.0",
     "eslint-plugin-only-warn": "1.1.0",
-    "eslint-plugin-prettier": "4.2.1",
-    "husky": "8.0.3",
-    "lint-staged": "13.2.2",
+    "eslint-plugin-prettier": "4.2.5",
+    "husky": "9.1.7",
+    "lint-staged": "13.3.0",
     "prettier": "2.8.8",
     "rollup-plugin-userscript-metablock": "0.3.1",
-    "tsx": "3.12.7",
-    "typed-query-selector": "^2.10.1",
-    "typescript": "5.0.4",
-    "unocss": "0.52.4",
-    "vite": "4.3.9"
+    "tsx": "4.20.3",
+    "typed-query-selector": "^2.12.0",
+    "typescript": "5.8.3",
+    "unocss": "66.3.3",
+    "vite": "7.0.6"
   },
-  "packageManager": "pnpm@8.5.1",
+  "packageManager": "pnpm@10.13.1",
   "engines": {
-    "node": "^18"
+    "node": "^22"
   },
   "pnpm": {
     "patchedDependencies": {
       "rollup-plugin-userscript-metablock@0.3.1": "patches/rollup-plugin-userscript-metablock@0.3.1.patch"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "unrs-resolver"
+    ]
   }
 }
