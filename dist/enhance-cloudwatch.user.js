@@ -375,6 +375,7 @@ useMutation(
     for (const cell of logCells) {
       let log = cell.textContent;
       if (!log) continue;
+      if (log.startsWith("highlighted")) continue;
       // escape html in to avoid rendering it to the dom
       log = createElement("span", { textContent: log }).innerHTML;
       // highlight log levels
@@ -410,7 +411,11 @@ useMutation(
           log = log.slice(logParts[0].length + 1);
         }
       }
-      cell.innerHTML = log;
+      const marker = createElement("span", {
+        textContent: "highlighted",
+        style: "display: none;",
+      });
+      cell.innerHTML = marker.outerHTML + "	" + log;
     }
   },
   { root: element.contentDocument }
