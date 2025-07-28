@@ -1,0 +1,8 @@
+name: Enhance Cloudwatch
+version: 0.1.0
+description: Enhance the AWS Cloudwatch console with additional features.
+icon: favicon:aws.amazon.com
+match: "*://*.console.aws.amazon.com/cloudwatch/home*"
+run-at: document-body
+grant:
+  - GM_addStyle
