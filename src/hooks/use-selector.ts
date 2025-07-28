@@ -1,61 +1,103 @@
 import type { StrictlyParseSelector } from "typed-query-selector/parser";
+import { UseMutationOptions, useMutation } from "@/hooks/use-mutation";
+import { isElementNode } from "@/utils";
 
-export interface UseSelectorOptions {
-  root?: Element;
-  event?: "added" | "removed";
+/** Recurse through child nodes to check if a node matches the target node */
+const hasChildNode = (root: Element, target: Element) => {
+  if (root === target) return true;
+  for (const child of root.children) {
+    if (hasChildNode(child, target)) return true;
+  }
+  return false;
+};
+
+export type UseSelectorNodeOptions = UseMutationOptions & { once?: boolean };
+
+//! watch for a node to be added or removed
+export function useSelectorNode<T extends Node = Node>(
+  target: T,
+  callback: (element: T) => void,
+  options: UseSelectorOptions = {}
+) {
+  const opts = {
+    root: options.root || document.body,
+    event: options.event || "added",
+    once: options.once || false,
+  };
+
+  const observer = useMutation((nodeList) => {
+    for (const nodes of nodeList) {
+      for (const node of nodes) {
+        if (node === target) {
+          callback(target);
+          if (opts.once) observer.disconnect();
+          return;
+        }
+      }
+    }
+  }, opts);
+
+  return observer;
 }
 
+export type UseSelectorOptions = Omit<UseSelectorNodeOptions, "root"> & {
+  root?: Element | Document | null;
+  subtree?: boolean;
+};
+
 //! watch selector for changes, fires callback every time the element is added
-//! call observer.disconnect() to stop watching
 export function useSelector<
   E extends Element = Element,
   S extends string = string,
   T extends StrictlyParseSelector<S, E> = StrictlyParseSelector<S, E>
 >(
-  selector: Node | S,
+  selector: S,
   callback: (element: T) => void,
   options: UseSelectorOptions = {}
 ) {
-  const opts: Required<UseSelectorOptions> = {
+  const opts = {
     root: options.root || document.body,
     event: options.event || "added",
+    once: options.once || false,
+    subtree: options.subtree || false,
   };
 
   if (opts.event === "added") {
-    if (typeof selector === "string") {
-      for (const el of document.querySelectorAll<T>(selector)) {
-        callback(el);
-      }
-    } else {
-      callback(selector as T);
+    for (const el of opts.root.querySelectorAll<T>(selector)) {
+      callback(el);
     }
   }
 
-  const observer = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-      const nodes =
-        opts.event === "added" ? mutation.addedNodes : mutation.removedNodes;
-      const matches =
-        typeof selector === "string" && opts.root.querySelectorAll<T>(selector);
+  const observer = useMutation((nodeList) => {
+    const seen = new Set<Element>();
+    const matches = opts.root.querySelectorAll<T>(selector);
+    if (matches.length === 0) return;
+
+    for (const nodes of nodeList) {
       for (const node of nodes) {
-        if (node.nodeType === Node.ELEMENT_NODE) {
-          const el = node as Element;
-          if (typeof selector === "string") {
-            if (matches) {
-              for (const match of matches) {
-                if (match === el) {
-                  callback(match);
-                  break;
-                }
+        if (!isElementNode(node)) continue;
+        for (const match of matches) {
+          if (opts.subtree) {
+            if (seen.has(match)) continue;
+            if (hasChildNode(node, match)) {
+              seen.add(match);
+              callback(match);
+              if (opts.once) {
+                observer.disconnect();
+                return;
               }
             }
-          } else if (node === selector) {
-            callback(el as T);
+          } else {
+            if (node === match) {
+              callback(match);
+              if (opts.once) observer.disconnect();
+              return;
+            }
           }
         }
       }
     }
-  });
-  observer.observe(opts.root, { childList: true, subtree: true });
+  }, opts);
+
   return observer;
 }

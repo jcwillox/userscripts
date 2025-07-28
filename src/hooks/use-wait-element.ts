@@ -1,10 +1,10 @@
 import type { StrictlyParseSelector } from "typed-query-selector/parser";
 import { useSelector } from "./use-selector";
 
-export interface WaitElementOptions {
-  root?: Element;
+export type WaitElementOptions = {
+  root?: Element | Document | null;
   timeout?: number;
-}
+};
 
 export function useWaitElement<
   E extends Element = Element,
@@ -20,10 +20,9 @@ export function useWaitElement<
     const observer = useSelector<T>(
       selector,
       (element) => {
-        observer.disconnect();
         resolve(element);
       },
-      { root: options.root }
+      { root: options.root, once: true }
     );
 
     if (options.timeout === undefined || options.timeout > 0) {
