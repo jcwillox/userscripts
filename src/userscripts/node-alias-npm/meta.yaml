@@ -1,0 +1,9 @@
+name: Node Alias (npm)
+version: 0.1.0
+description: Uses node-alias for the package install command
+icon: favicon:npmjs.com
+match: "*://*.npmjs.com/package/*"
+run-at: document-start
+grant:
+  - GM_addStyle
+  - GM_setClipboard
