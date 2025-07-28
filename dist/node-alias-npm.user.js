@@ -158,7 +158,7 @@ function useWaitElement(selector, options = {}) {
       (element) => {
         resolve(element);
       },
-      { root: options.root, once: true }
+      { root: options.root, subtree: options.subtree, once: true }
     );
     if (options.timeout === void 0 || options.timeout > 0) {
       setTimeout(() => {

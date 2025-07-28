@@ -293,7 +293,7 @@ function useWaitElement(selector, options = {}) {
       (element2) => {
         resolve(element2);
       },
-      { root: options.root, once: true }
+      { root: options.root, subtree: options.subtree, once: true }
     );
     if (options.timeout === void 0 || options.timeout > 0) {
       setTimeout(() => {
@@ -332,7 +332,9 @@ const ft = new Intl.DateTimeFormat(
   navigator.language === "en-US" ? void 0 : navigator.language,
   { dateStyle: "short", timeStyle: "medium" }
 );
-const element = await useWaitElement("iframe#microConsole-Logs");
+const element = await useWaitElement("iframe#microConsole-Logs", {
+  subtree: true,
+});
 function highlightSection(text, start, end, color) {
   const before = text.slice(0, start);
   const after = text.slice(end);

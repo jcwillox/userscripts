@@ -1,8 +1,10 @@
 import type { StrictlyParseSelector } from "typed-query-selector/parser";
-import { useSelector } from "./use-selector";
+import { UseSelectorOptions, useSelector } from "./use-selector";
 
-export type WaitElementOptions = {
-  root?: Element | Document | null;
+export type WaitElementOptions = Pick<
+  UseSelectorOptions,
+  "root" | "subtree"
+> & {
   timeout?: number;
 };
 
@@ -22,7 +24,7 @@ export function useWaitElement<
       (element) => {
         resolve(element);
       },
-      { root: options.root, once: true }
+      { root: options.root, subtree: options.subtree, once: true }
     );
 
     if (options.timeout === undefined || options.timeout > 0) {

@@ -26,7 +26,9 @@ const ft = new Intl.DateTimeFormat(
   { dateStyle: "short", timeStyle: "medium" }
 );
 
-const element = await useWaitElement("iframe#microConsole-Logs");
+const element = await useWaitElement("iframe#microConsole-Logs", {
+  subtree: true,
+});
 
 function highlightSection(
   text: string,
