@@ -20,3 +20,15 @@ export function isTruthy<T>(v: T): v is Exclude<NonNullable<T>, false> {
 export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export function isString(value: unknown): value is string {
+  return typeof value === "string";
+}
+
+export function isDocumentNode(node: Node): node is Document {
+  return node.nodeType === Node.DOCUMENT_NODE;
+}
+
+export function isElementNode(node: Node): node is Element {
+  return node.nodeType === Node.ELEMENT_NODE;
+}
