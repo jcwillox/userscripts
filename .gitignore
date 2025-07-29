@@ -116,3 +116,4 @@ out
 
 testing/*/
 dist/*.test.user.js
+.idea/
