@@ -1,5 +1,5 @@
 name: Enhance Cloudwatch
-version: 0.1.0
+version: 0.1.1
 description: Enhance the AWS Cloudwatch console with additional features.
 icon: favicon:aws.amazon.com
 match: "*://*.console.aws.amazon.com/cloudwatch/home*"

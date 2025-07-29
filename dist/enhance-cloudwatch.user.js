@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Enhance Cloudwatch
 // @namespace   https://github.com/jcwillox/userscripts
-// @version     0.1.0
+// @version     0.1.1
 // @description Enhance the AWS Cloudwatch console with additional features.
 // @author      jcwillox
 // @license     MIT
@@ -398,8 +398,8 @@ useMutation(
         );
       } else {
         const logParts = log.split("	");
-        if (logParts[1].length === 36) {
-          const reqId = logParts[1];
+        if (logParts[0] && logParts[1]?.length === 36) {
+          const reqId = logParts[1] ?? "";
           log = highlightSection(
             log,
             logParts[0].length + 1,
@@ -407,7 +407,7 @@ useMutation(
             reqColors[simpleHash(reqId) % reqColors.length]
           );
         }
-        if (logParts[0].endsWith("Z") || logParts[0].includes("T")) {
+        if (logParts[0]?.endsWith("Z") || logParts[0]?.includes("T")) {
           log = log.slice(logParts[0].length + 1);
         }
       }
