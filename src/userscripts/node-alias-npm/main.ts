@@ -1,60 +1,84 @@
 import { useSelectorNode, useWaitElement } from "@/hooks";
-import { createElement, createMiddleware, isTruthy } from "@/utils";
+import { createElement, isTruthy, sleep } from "@/utils";
+import { openPkgInStackBlitz } from "./open-in-stackblitz";
 
-// language=CSS
-GM_addStyle("p:has(> div#a8c751d8) { margin: 0; }");
 GM_addStyle(`@unocss-placeholder
 `);
 
-const PKG_REGEX = /^\/package\/(?<pkg>.+?)(?:\/v\/(?<version>[\d.]+))?$/;
-const CMD_SELECTOR = "#top > div > div:first-of-type";
+const CMD_SELECTOR = "#top > aside > div";
+let menuIds: number[] = [];
 
-const containerEl = document.createElement("div");
-containerEl.id = "a8c751d8";
+const getPackage = (pathname: string) => {
+  if (!pathname.startsWith("/package/")) return null;
+  const parts = pathname.slice(9).split("/");
+  const isScoped = parts[0]?.startsWith("@");
+  const pkg = parts.splice(0, isScoped ? 2 : 1).join("/");
+  const version = parts[0] === "v" ? parts[1] : undefined;
+  return { pkg, version, fullPkg: [pkg, version].filter(isTruthy).join("@") };
+};
 
-let blockElCache: Node | undefined = undefined;
+//! replace command block with our blocks
+const apply = () => {
+  const pkgInfo = getPackage(location.pathname);
+  if (!pkgInfo) return;
+  const { pkg, fullPkg, version } = pkgInfo;
 
-function apply() {
-  const { pkg, version } = PKG_REGEX.exec(location.pathname)?.groups || {};
-  const fullPkg = [pkg, version].filter(isTruthy).join("@");
-  if (!pkg) return;
+  const blockToReplace = document.querySelector(CMD_SELECTOR);
+  if (!blockToReplace) return;
 
   const isTypes = pkg.startsWith("@types/");
   const hasTypes = !!document.querySelector("h1 a[href*='@types/'] > img");
-  const blockEl = document.querySelector(CMD_SELECTOR);
-  if (!blockEl) return;
-  if (!blockElCache) blockElCache = blockEl.cloneNode(true);
+
+  const markerEl = createElement("div", { className: ":uno: un-(hidden)" });
+  const containerEl = createElement("div", {
+    id: "a8c751d8",
+    className: ":uno: un-(flex flex-col gap-4 mt-4)",
+  });
+
+  const cmds = [
+    `${fullPkg}`,
+    !isTypes && `n a ${fullPkg}`,
+    `n a -D ${fullPkg}`,
+    !isTypes && `n g ${fullPkg}`,
+    hasTypes && `n a -D @types/${pkg}`,
+    hasTypes && `n a ${fullPkg} && n a -D @types/${pkg}`,
+  ].filter(isTruthy);
 
   containerEl.replaceChildren(
-    ...[
-      `${fullPkg}`,
-      !isTypes && `n a ${fullPkg}`,
-      `n a -D ${fullPkg}`,
-      !isTypes && `n g ${fullPkg}`,
-      hasTypes && `n a -D @types/${pkg}`,
-      hasTypes && `n a ${fullPkg} && n a -D @types/${pkg}`,
-    ]
-      .filter((x): x is string => !!x)
-      .map((cmd) => {
-        const newBlockEl = blockElCache?.cloneNode(
-          true
-        ) as HTMLParagraphElement;
-        const spanEl = newBlockEl.querySelector("p > code");
-        if (!spanEl) return newBlockEl;
-
-        spanEl.innerText = cmd;
-        spanEl.onclick = () => {
+    markerEl,
+    ...cmds.map((cmd) => {
+      const codeEl = createElement("code", {
+        className: ":uno: un-(font-code text-14px lh-4.5)",
+        innerText: cmd,
+      });
+      return createElement("div", {
+        className:
+          ":uno: un-(w-full flex justify-between items-center px-2 py-2 bg-neutral-50 b b-solid b-neutral-200 rd-md text-left cursor-pointer) hover:un-(bg-neutral-100)",
+        onclick: async () => {
           GM_setClipboard(cmd);
-          spanEl.innerText = "Copied!";
-          setTimeout(() => {
-            spanEl.innerText = cmd;
-          }, 500);
-        };
-
-        return newBlockEl;
-      }),
+          codeEl.innerText = "Copied!";
+          await sleep(500);
+          codeEl.innerText = cmd;
+        },
+        children: [
+          createElement("span", {
+            className:
+              ":uno: i-mdi-chevron-right un-(size-[18px] shrink-0 mr-2)",
+          }),
+          createElement("span", {
+            className: ":uno: un-grow-1",
+            children: codeEl,
+          }),
+          createElement("span", {
+            className:
+              ":uno: i-mdi-content-copy un-(size-[18px] c-neutral-500 shrink-0 mr-2)",
+          }),
+        ],
+      });
+    }),
     createElement("div", {
-      className: ":uno: un-(flex flex-wrap justify-center space-x-1)",
+      className:
+        ":uno: un-(grid grid-cols-2 gap-x-1) *:odd:un-(justify-self-end)",
       children: [
         createElement("a", {
           href: `https://bundlephobia.com/package/${fullPkg}`,
@@ -87,26 +111,46 @@ function apply() {
           }),
         }),
         createElement("a", {
-          href: `https://npm.runkit.com/${fullPkg}`,
+          href: "#",
+          onclick: () => openPkgInStackBlitz(pkg, version),
           children: createElement("img", {
-            src: "https://img.shields.io/badge/runkit-npm-f25ca4",
+            src: "https://img.shields.io/badge/stack-blitz-1574ef",
           }),
         }),
       ],
     })
   );
 
-  blockEl.className = "";
-  blockEl.replaceChildren(containerEl);
+  blockToReplace.replaceWith(containerEl);
 
-  return containerEl;
-}
+  //! register menu commands
+  for (const menuId of menuIds) {
+    GM_unregisterMenuCommand(menuId);
+  }
 
-//! reapply on navigate
-history.pushState = createMiddleware(history.pushState, (args, next) => {
-  next(...args);
-  apply();
-});
+  menuIds = [
+    ...cmds.map((cmd) =>
+      GM_registerMenuCommand(cmd, () => GM_setClipboard(cmd))
+    ),
+    GM_registerMenuCommand("pkg-size.dev", () =>
+      window.open(`https://pkg-size.dev/${fullPkg}`, "_blank")
+    ),
+    GM_registerMenuCommand("bundlephobia.com", () =>
+      window.open(`https://bundlephobia.com/package/${fullPkg}`, "_blank")
+    ),
+    GM_registerMenuCommand("packagephobia.com", () =>
+      window.open(`https://packagephobia.com/result?p=${fullPkg}`, "_blank")
+    ),
+    GM_registerMenuCommand("stackblitz.com", () =>
+      openPkgInStackBlitz(pkg, version)
+    ),
+  ];
+
+  return markerEl;
+};
+
+//! reapply on navigation
+window.addEventListener("urlchange", () => apply());
 
 //! reapply when our element is removed due to hydration mismatches
 useWaitElement(CMD_SELECTOR).then((blockEl) => {
@@ -115,7 +159,7 @@ useWaitElement(CMD_SELECTOR).then((blockEl) => {
 
   useSelectorNode(containerEl, () => apply(), {
     event: "removed",
-    root: blockEl,
+    root: blockEl.parentElement,
     once: true,
   });
 });

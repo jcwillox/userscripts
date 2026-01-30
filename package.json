@@ -50,6 +50,7 @@
     "prettier": "2.8.8",
     "rollup-plugin-userscript-metablock": "0.3.1",
     "tsx": "4.20.3",
+    "type-fest": "5.4.2",
     "typed-query-selector": "^2.12.0",
     "typescript": "5.8.3",
     "unocss": "66.3.3",

@@ -10,6 +10,9 @@
 // @run-at      document-start
 // @grant       GM_addStyle
 // @grant       GM_setClipboard
+// @grant       GM_registerMenuCommand
+// @grant       GM_unregisterMenuCommand
+// @grant       window.onurlchange
 // ==/UserScript==
 
 console.info(
@@ -54,6 +57,9 @@ function coerceArray(value) {
 function isTruthy(v) {
   return !!v;
 }
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 function isElementNode(node) {
   return node.nodeType === Node.ELEMENT_NODE;
 }
@@ -65,14 +71,6 @@ function createElement(tag, { style, ...options }) {
   if (style) el.style.cssText = style;
   children && el.append(...coerceArray(children));
   return el;
-}
-
-function createMiddleware(fn, ...middlewares) {
-  if (!middlewares.length) return fn.bind(this);
-  return function (...args) {
-    const next = createMiddleware.bind(this)(fn, ...middlewares.slice(1));
-    return middlewares[0].call(this, args, next);
-  };
 }
 
 const hasChildNode = (root, target) => {
@@ -105,14 +103,15 @@ function useSelectorNode(target, callback, options = {}) {
 // watch selector for changes, fires callback every time the element is added
 function useSelector(selector, callback, options = {}) {
   const opts = {
-    root: options.root || document.body,
-    event: options.event || "added",
-    once: options.once || false,
-    subtree: options.subtree || false,
+    root: options.root ?? document.body,
+    event: options.event ?? "added",
+    once: options.once ?? false,
+    subtree: options.subtree ?? true,
   };
   if (opts.event === "added") {
     for (const el of opts.root.querySelectorAll(selector)) {
       callback(el);
+      if (opts.once) return;
     }
   }
   const observer = useMutation((nodeList) => {
@@ -149,10 +148,6 @@ function useSelector(selector, callback, options = {}) {
 
 function useWaitElement(selector, options = {}) {
   return new Promise((resolve, reject) => {
-    // check if element already exists
-    const el = document.querySelector(selector);
-    if (el) return resolve(el);
-    // wait for element to be added
     const observer = useSelector(
       selector,
       (element) => {
@@ -162,60 +157,175 @@ function useWaitElement(selector, options = {}) {
     );
     if (options.timeout === void 0 || options.timeout > 0) {
       setTimeout(() => {
-        observer.disconnect();
+        observer?.disconnect();
         reject(new Error(`Timeout waiting for element: '${selector}'`));
       }, options.timeout || 5e3);
     }
   });
 }
 
-GM_addStyle("p:has(> div#a8c751d8) { margin: 0; }");
+const createInput = (name, value) =>
+  createElement("input", { type: "hidden", name, value });
+const createPackageJson = (pkg) => JSON.stringify(pkg, null, 2);
+function createProjectForm({
+  template,
+  title,
+  description,
+  dependencies,
+  files,
+  settings,
+}) {
+  const form = createElement("form", { style: "display:none!important;" });
+  form.method = "POST";
+  form.append(
+    createInput("project[title]", title),
+    createInput("project[template]", template),
+    ...(description ? [createInput("project[description]", description)] : []),
+    ...(dependencies && template !== "node"
+      ? [createInput("project[dependencies]", JSON.stringify(dependencies))]
+      : []),
+    ...(settings
+      ? [createInput("project[settings]", JSON.stringify(settings))]
+      : []),
+    ...Object.entries(files).map(([path, contents]) =>
+      createInput(`project[files][${path}]`, contents)
+    )
+  );
+  return form;
+}
+function openNewProject(project, options) {
+  const form = createProjectForm(project);
+  const params = new URLSearchParams(
+    Object.fromEntries(
+      Object.entries(options).map(([key, value]) =>
+        Array.isArray(value) ? [key, value.join(",")] : [key, String(value)]
+      )
+    )
+  );
+  const url = new URL(`https://stackblitz.com/run?${params.toString()}`);
+  form.action = url.href;
+  form.target = "_blank";
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+}
+const openPkgInStackBlitz = (pkg, version) =>
+  openNewProject(
+    {
+      title: pkg,
+      template: "node",
+      files: {
+        "main.ts": `import * as pkg from "${pkg}";
+
+console.log("Hello World", pkg);`,
+        "package.json": createPackageJson({
+          name: "playground",
+          version: "0.0.0",
+          type: "module",
+          scripts: {
+            start: "node --watch --import tsx main.ts",
+          },
+          dependencies: {
+            [pkg]: version ?? "latest",
+            tsx: "latest",
+          },
+          stackblitz: {
+            installDependencies: false,
+            startCommand: "pnpm install && node --watch --import tsx main.ts",
+          },
+        }),
+      },
+      settings: {
+        compile: {
+          trigger: "save",
+        },
+      },
+    },
+    {
+      newWindow: true,
+      terminalHeight: 50,
+      openFile: "main.ts",
+      view: "editor",
+    }
+  );
+
 GM_addStyle(`/* layer: preflights */
 *,::before,::after{--un-rotate:0;--un-rotate-x:0;--un-rotate-y:0;--un-rotate-z:0;--un-scale-x:1;--un-scale-y:1;--un-scale-z:1;--un-skew-x:0;--un-skew-y:0;--un-translate-x:0;--un-translate-y:0;--un-translate-z:0;--un-pan-x: ;--un-pan-y: ;--un-pinch-zoom: ;--un-scroll-snap-strictness:proximity;--un-ordinal: ;--un-slashed-zero: ;--un-numeric-figure: ;--un-numeric-spacing: ;--un-numeric-fraction: ;--un-border-spacing-x:0;--un-border-spacing-y:0;--un-ring-offset-shadow:0 0 rgb(0 0 0 / 0);--un-ring-shadow:0 0 rgb(0 0 0 / 0);--un-shadow-inset: ;--un-shadow:0 0 rgb(0 0 0 / 0);--un-ring-inset: ;--un-ring-offset-width:0px;--un-ring-offset-color:#fff;--un-ring-width:0px;--un-ring-color:rgb(147 197 253 / 0.5);--un-blur: ;--un-brightness: ;--un-contrast: ;--un-drop-shadow: ;--un-grayscale: ;--un-hue-rotate: ;--un-invert: ;--un-saturate: ;--un-sepia: ;--un-backdrop-blur: ;--un-backdrop-brightness: ;--un-backdrop-contrast: ;--un-backdrop-grayscale: ;--un-backdrop-hue-rotate: ;--un-backdrop-invert: ;--un-backdrop-opacity: ;--un-backdrop-saturate: ;--un-backdrop-sepia: ;}::backdrop{--un-rotate:0;--un-rotate-x:0;--un-rotate-y:0;--un-rotate-z:0;--un-scale-x:1;--un-scale-y:1;--un-scale-z:1;--un-skew-x:0;--un-skew-y:0;--un-translate-x:0;--un-translate-y:0;--un-translate-z:0;--un-pan-x: ;--un-pan-y: ;--un-pinch-zoom: ;--un-scroll-snap-strictness:proximity;--un-ordinal: ;--un-slashed-zero: ;--un-numeric-figure: ;--un-numeric-spacing: ;--un-numeric-fraction: ;--un-border-spacing-x:0;--un-border-spacing-y:0;--un-ring-offset-shadow:0 0 rgb(0 0 0 / 0);--un-ring-shadow:0 0 rgb(0 0 0 / 0);--un-shadow-inset: ;--un-shadow:0 0 rgb(0 0 0 / 0);--un-ring-inset: ;--un-ring-offset-width:0px;--un-ring-offset-color:#fff;--un-ring-width:0px;--un-ring-color:rgb(147 197 253 / 0.5);--un-blur: ;--un-brightness: ;--un-contrast: ;--un-drop-shadow: ;--un-grayscale: ;--un-hue-rotate: ;--un-invert: ;--un-saturate: ;--un-sepia: ;--un-backdrop-blur: ;--un-backdrop-brightness: ;--un-backdrop-contrast: ;--un-backdrop-grayscale: ;--un-backdrop-hue-rotate: ;--un-backdrop-invert: ;--un-backdrop-opacity: ;--un-backdrop-saturate: ;--un-backdrop-sepia: ;}
 /* layer: shortcuts */
-.uno-z9q3ld{display:flex;flex-wrap:wrap;justify-content:center;}
-.uno-z9q3ld>:not([hidden])~:not([hidden]){--un-space-x-reverse:0;margin-left:calc(0.25rem * calc(1 - var(--un-space-x-reverse)));margin-right:calc(0.25rem * var(--un-space-x-reverse));}
+.uno-1eahsp{--un-icon:url("data:image/svg+xml;utf8,%3Csvg viewBox='0 0 24 24' width='1em' height='1em' xmlns='http://www.w3.org/2000/svg' %3E%3Cpath fill='currentColor' d='M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12z'/%3E%3C/svg%3E");-webkit-mask:var(--un-icon) no-repeat;mask:var(--un-icon) no-repeat;-webkit-mask-size:100% 100%;mask-size:100% 100%;background-color:currentColor;color:inherit;width:1em;height:1em;margin-right:0.5rem;width:18px;height:18px;flex-shrink:0;--un-text-opacity:1;color:rgb(115 115 115 / var(--un-text-opacity)) /* #737373 */;}
+.uno-j3hsa1{--un-icon:url("data:image/svg+xml;utf8,%3Csvg viewBox='0 0 24 24' width='1em' height='1em' xmlns='http://www.w3.org/2000/svg' %3E%3Cpath fill='currentColor' d='M8.59 16.58L13.17 12L8.59 7.41L10 6l6 6l-6 6z'/%3E%3C/svg%3E");-webkit-mask:var(--un-icon) no-repeat;mask:var(--un-icon) no-repeat;-webkit-mask-size:100% 100%;mask-size:100% 100%;background-color:currentColor;color:inherit;width:1em;height:1em;margin-right:0.5rem;width:18px;height:18px;flex-shrink:0;}
+.uno-ds8bb3{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:0.25rem;}
+.uno-693hup{margin-top:1rem;display:flex;flex-direction:column;gap:1rem;}
+.uno-6vndvt{display:none;}
+.uno-2oz0p5{width:100%;display:flex;cursor:pointer;align-items:center;justify-content:space-between;border-width:1px;--un-border-opacity:1;border-color:rgb(229 229 229 / var(--un-border-opacity));border-radius:0.375rem;border-style:solid;--un-bg-opacity:1;background-color:rgb(250 250 250 / var(--un-bg-opacity)) /* #fafafa */;padding-left:0.5rem;padding-right:0.5rem;padding-top:0.5rem;padding-bottom:0.5rem;text-align:left;}
+.uno-9xep0c{flex-grow:1;}
+.uno-ds8bb3 > *:nth-child(odd){justify-self:end;}
+.uno-2oz0p5:hover{--un-bg-opacity:1;background-color:rgb(245 245 245 / var(--un-bg-opacity)) /* #f5f5f5 */;}
+.uno-ewh6pt{font-size:14px;line-height:1.125rem;font-family:"Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
 `);
-const PKG_REGEX = /^\/package\/(?<pkg>.+?)(?:\/v\/(?<version>[\d.]+))?$/;
-const CMD_SELECTOR = "#top > div > div:first-of-type";
-const containerEl = document.createElement("div");
-containerEl.id = "a8c751d8";
-let blockElCache = void 0;
-function apply() {
-  const { pkg, version } = PKG_REGEX.exec(location.pathname)?.groups || {};
-  const fullPkg = [pkg, version].filter(isTruthy).join("@");
-  if (!pkg) return;
+const CMD_SELECTOR = "#top > aside > div";
+let menuIds = [];
+const getPackage = (pathname) => {
+  if (!pathname.startsWith("/package/")) return null;
+  const parts = pathname.slice(9).split("/");
+  const isScoped = parts[0]?.startsWith("@");
+  const pkg = parts.splice(0, isScoped ? 2 : 1).join("/");
+  const version = parts[0] === "v" ? parts[1] : void 0;
+  return { pkg, version, fullPkg: [pkg, version].filter(isTruthy).join("@") };
+};
+// replace command block with our blocks
+const apply = () => {
+  const pkgInfo = getPackage(location.pathname);
+  if (!pkgInfo) return;
+  const { pkg, fullPkg, version } = pkgInfo;
+  const blockToReplace = document.querySelector(CMD_SELECTOR);
+  if (!blockToReplace) return;
   const isTypes = pkg.startsWith("@types/");
   const hasTypes = !!document.querySelector("h1 a[href*='@types/'] > img");
-  const blockEl = document.querySelector(CMD_SELECTOR);
-  if (!blockEl) return;
-  if (!blockElCache) blockElCache = blockEl.cloneNode(true);
+  const markerEl = createElement("div", { className: "uno-6vndvt" });
+  const containerEl = createElement("div", {
+    id: "a8c751d8",
+    className: "uno-693hup",
+  });
+  const cmds = [
+    `${fullPkg}`,
+    !isTypes && `n a ${fullPkg}`,
+    `n a -D ${fullPkg}`,
+    !isTypes && `n g ${fullPkg}`,
+    hasTypes && `n a -D @types/${pkg}`,
+    hasTypes && `n a ${fullPkg} && n a -D @types/${pkg}`,
+  ].filter(isTruthy);
   containerEl.replaceChildren(
-    ...[
-      `${fullPkg}`,
-      !isTypes && `n a ${fullPkg}`,
-      `n a -D ${fullPkg}`,
-      !isTypes && `n g ${fullPkg}`,
-      hasTypes && `n a -D @types/${pkg}`,
-      hasTypes && `n a ${fullPkg} && n a -D @types/${pkg}`,
-    ]
-      .filter((x) => !!x)
-      .map((cmd) => {
-        const newBlockEl = blockElCache?.cloneNode(true);
-        const spanEl = newBlockEl.querySelector("p > code");
-        if (!spanEl) return newBlockEl;
-        spanEl.innerText = cmd;
-        spanEl.onclick = () => {
+    markerEl,
+    ...cmds.map((cmd) => {
+      const codeEl = createElement("code", {
+        className: "uno-ewh6pt",
+        innerText: cmd,
+      });
+      return createElement("div", {
+        className: "uno-2oz0p5",
+        onclick: async () => {
           GM_setClipboard(cmd);
-          spanEl.innerText = "Copied!";
-          setTimeout(() => {
-            spanEl.innerText = cmd;
-          }, 500);
-        };
-        return newBlockEl;
-      }),
+          codeEl.innerText = "Copied!";
+          await sleep(500);
+          codeEl.innerText = cmd;
+        },
+        children: [
+          createElement("span", {
+            className: "uno-j3hsa1",
+          }),
+          createElement("span", {
+            className: "uno-9xep0c",
+            children: codeEl,
+          }),
+          createElement("span", {
+            className: "uno-1eahsp",
+          }),
+        ],
+      });
+    }),
     createElement("div", {
-      className: "uno-z9q3ld",
+      className: "uno-ds8bb3",
       children: [
         createElement("a", {
           href: `https://bundlephobia.com/package/${fullPkg}`,
@@ -248,30 +358,48 @@ function apply() {
           }),
         }),
         createElement("a", {
-          href: `https://npm.runkit.com/${fullPkg}`,
+          href: "#",
+          onclick: () => openPkgInStackBlitz(pkg, version),
           children: createElement("img", {
-            src: "https://img.shields.io/badge/runkit-npm-f25ca4",
+            src: "https://img.shields.io/badge/stack-blitz-1574ef",
           }),
         }),
       ],
     })
   );
-  blockEl.className = "";
-  blockEl.replaceChildren(containerEl);
-  return containerEl;
-}
-// reapply on navigate
-history.pushState = createMiddleware(history.pushState, (args, next) => {
-  next(...args);
-  apply();
-});
+  blockToReplace.replaceWith(containerEl);
+  // register menu commands
+  for (const menuId of menuIds) {
+    GM_unregisterMenuCommand(menuId);
+  }
+  menuIds = [
+    ...cmds.map((cmd) =>
+      GM_registerMenuCommand(cmd, () => GM_setClipboard(cmd))
+    ),
+    GM_registerMenuCommand("pkg-size.dev", () =>
+      window.open(`https://pkg-size.dev/${fullPkg}`, "_blank")
+    ),
+    GM_registerMenuCommand("bundlephobia.com", () =>
+      window.open(`https://bundlephobia.com/package/${fullPkg}`, "_blank")
+    ),
+    GM_registerMenuCommand("packagephobia.com", () =>
+      window.open(`https://packagephobia.com/result?p=${fullPkg}`, "_blank")
+    ),
+    GM_registerMenuCommand("stackblitz.com", () =>
+      openPkgInStackBlitz(pkg, version)
+    ),
+  ];
+  return markerEl;
+};
+// reapply on navigation
+window.addEventListener("urlchange", () => apply());
 // reapply when our element is removed due to hydration mismatches
 useWaitElement(CMD_SELECTOR).then((blockEl) => {
-  const containerEl2 = apply();
-  if (!containerEl2) return;
-  useSelectorNode(containerEl2, () => apply(), {
+  const containerEl = apply();
+  if (!containerEl) return;
+  useSelectorNode(containerEl, () => apply(), {
     event: "removed",
-    root: blockEl,
+    root: blockEl.parentElement,
     once: true,
   });
 });

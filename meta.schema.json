@@ -45,7 +45,10 @@
         "GM_saveTab",
         "GM_getTabs",
         "GM_notification",
-        "GM_setClipboard"
+        "GM_setClipboard",
+        "window.close",
+        "window.focus",
+        "window.onurlchange"
       ]
     }
   },

@@ -14,11 +14,6 @@ export function useWaitElement<
   T extends StrictlyParseSelector<S, E> = StrictlyParseSelector<S, E>
 >(selector: S, options: WaitElementOptions = {}): Promise<T> {
   return new Promise((resolve, reject) => {
-    //! check if element already exists
-    const el = document.querySelector<T>(selector);
-    if (el) return resolve(el);
-
-    //! wait for element to be added
     const observer = useSelector<T>(
       selector,
       (element) => {
@@ -29,7 +24,7 @@ export function useWaitElement<
 
     if (options.timeout === undefined || options.timeout > 0) {
       setTimeout(() => {
-        observer.disconnect();
+        observer?.disconnect();
         reject(new Error(`Timeout waiting for element: '${selector}'`));
       }, options.timeout || 5000);
     }

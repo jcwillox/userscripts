@@ -56,15 +56,16 @@ export function useSelector<
   options: UseSelectorOptions = {}
 ) {
   const opts = {
-    root: options.root || document.body,
-    event: options.event || "added",
-    once: options.once || false,
-    subtree: options.subtree || false,
+    root: options.root ?? document.body,
+    event: options.event ?? "added",
+    once: options.once ?? false,
+    subtree: options.subtree ?? true,
   };
 
   if (opts.event === "added") {
     for (const el of opts.root.querySelectorAll<T>(selector)) {
       callback(el);
+      if (opts.once) return;
     }
   }
 
