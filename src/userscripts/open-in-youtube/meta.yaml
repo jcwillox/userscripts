@@ -1,10 +1,10 @@
 name: Open in YouTube
-version: 0.1.1
+version: 0.2.0
 description: Adds a button to YouTube Music and Shorts to open the video in YouTube
 icon: favicon:youtube.com
 match:
   - https://music.youtube.com/watch?v=*
-  - https://www.youtube.com/*
+  - https://www.youtube.com/shorts/*
 run-at: document-end
 grant:
   - GM_openInTab
