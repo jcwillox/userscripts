@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Node Alias (npm)
 // @namespace   https://github.com/jcwillox/userscripts
-// @version     0.1.0
+// @version     0.2.0
 // @description Uses node-alias for the package install command
 // @author      jcwillox
 // @license     MIT
